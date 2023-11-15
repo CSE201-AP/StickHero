@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Copyright (c) 2017, Gluon and/or its affiliates.
+    All rights reserved. Use is subject to license terms.
+
+    This file is available and licensed under the following license:
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions
+    are met:
+
+   - Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+   - Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in
+     the documentation and/or other materials provided with the distribution.
+   - Neither the name of Oracle Corporation and Gluon nor the names of its
+     contributors may be used to endorse or promote products derived
+     from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stickhero.GameOverController">
+   <children>
+      <View maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0">
+         <center>
+            <AnchorPane BorderPane.alignment="CENTER">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dde3ea" height="180.0" layoutX="48.0" layoutY="116.0" stroke="BLACK" strokeLineCap="BUTT" strokeType="INSIDE" style="-fx-arc-height: 30; -fx-arc-width: 30;" width="240.0" />
+                  <Label alignment="CENTER" layoutX="-1.0" layoutY="60.0" prefHeight="44.0" prefWidth="335.0" text="GAME OVER!" textAlignment="CENTER">
+                     <font>
+                        <Font name="Roboto Bold" size="36.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="147.0" layoutY="131.0" text="SCORE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="146.0" layoutY="147.0" text="54">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="153.0" layoutY="211.0" text="BEST">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="135.0" layoutY="229.0" text="104">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="104.0" layoutY="496.0" mnemonicParsing="false" onAction="#onHomeButtonClicked" prefHeight="54.0" prefWidth="58.0" style="-fx-background-color: rgba(0, 0, 0, 0);">
+                     <graphic>
+                        <ImageView fitHeight="70.0" fitWidth="70.0">
+                           <image>
+                              <Image url="@../images/Home.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <ImageView fitHeight="18.0" fitWidth="28.0" layoutX="291.0" layoutY="23.0">
+                     <image>
+                        <Image url="@../images/Cherry.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="263.0" layoutY="24.0" text="214" />
+                  <Label layoutX="109.0" layoutY="338.0" text="REVIVE?">
+                     <font>
+                        <Font name="Roboto Bold" size="32.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="99.0" layoutY="388.0" mnemonicParsing="false" onAction="#onReviveButtonClicked" prefHeight="72.0" prefWidth="140.0" style="-fx-font-size: 30; -fx-background-color: #dde3ea; -fx-border-color: #000000; -fx-background-radius: 10; -fx-border-radius: 10; -fx-font-style: Bold; -fx-text-fill: #000000;" text="x 5" textFill="RED">
+                     <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="54.0">
+                           <image>
+                              <Image url="@../images/Cherry.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font name="Roboto" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="170.0" layoutY="499.0" mnemonicParsing="false" onAction="#onRestartButtonClicked" prefHeight="54.0" prefWidth="54.0" style="-fx-background-color: rgba(0, 0, 0, 0);">
+                     <graphic>
+                        <ImageView fitHeight="65.0" fitWidth="65.0">
+                           <image>
+                              <Image url="@../images/Restart.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </center>
+      </View>
+   </children>
+</AnchorPane>
