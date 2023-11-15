@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 public class PauseMenuController {
     @FXML
     public void onResumeButtonClick() {
-        StickHero.getInstance().loadFXMLScene("in-game.fxml");
+        StickHero.getInstance().loadFXMLScene("fxml/in-game.fxml");
     }
 
     @FXML

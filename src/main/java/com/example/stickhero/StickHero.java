@@ -27,8 +27,8 @@ public class StickHero extends Application {
     public void start(Stage stage) {
         this.stage = stage;
         stage.setTitle("Stick Hero");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("Hero.png")));
-        loadFXMLScene("main-menu.fxml");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("images/Hero.png")));
+        loadFXMLScene("fxml/main-menu.fxml");
         stage.show();
         stage.setResizable(false);
     }

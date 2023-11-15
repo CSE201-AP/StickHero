@@ -5,12 +5,12 @@ import javafx.fxml.FXML;
 public class MainMenuController {
     @FXML
     public void onPlayButtonClicked() {
-        StickHero.getInstance().loadFXMLScene("in-game.fxml");
+        StickHero.getInstance().loadFXMLScene("fxml/in-game.fxml");
     }
 
     @FXML
     public void onLoadButtonClicked() {
-        StickHero.getInstance().loadFXMLScene("in-game.fxml");
+        StickHero.getInstance().loadFXMLScene("fxml/in-game.fxml");
     }
 
     @FXML
