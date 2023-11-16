@@ -2,7 +2,7 @@ package com.example.stickhero;
 
 import javafx.fxml.FXML;
 
-public class MainMenuController {
+public class MutedMenuController {
     @FXML
     public void onPlayButtonClicked() {
         StickHero.getInstance().loadFXMLScene("fxml/in-game.fxml");
@@ -15,6 +15,6 @@ public class MainMenuController {
 
     @FXML
     public void onSoundButtonClicked() {
-        StickHero.getInstance().loadFXMLScene("fxml/muted-menu.fxml");
+        StickHero.getInstance().loadFXMLScene("fxml/main-menu.fxml");
     }
 }
