@@ -1,8 +1,10 @@
 package com.example.stickhero.structure;
 
-public class Hero extends ImageSprite {
+public class Hero extends ImageSprite implements Serializable {
     private Stick stick;
-    private int cherries;
+    private int cherries = 0;
+
+    private int score = 0;
     private CollisionTimer collisionTimer;
 
     public void startExtendStick() {
