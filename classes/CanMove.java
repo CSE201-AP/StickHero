@@ -4,10 +4,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 
 public class CanMove implements MovementAnimator {
-    private double speed;
-    private Node node;
-    private AnimatorEvent before;
-    private AnimatorEvent after;
+    private final double speed;
+    private final Node node;
+    private final AnimatorEvent before;
+    private final AnimatorEvent after;
 
     public CanMove(Node node, double speed) {
     }

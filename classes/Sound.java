@@ -5,7 +5,7 @@ import javafx.scene.media.Media;
 import java.util.Map;
 
 public abstract class Sound {
-    private static Map<String, Media> sounds;
+    private static final Map<String, Media> sounds;
 
     public static Media getSound(String file) {
     }

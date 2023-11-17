@@ -7,8 +7,8 @@ import javafx.scene.image.ImageView;
 import java.util.List;
 
 public class SpriteSheet extends ImageView {
-    private SpriteSheetAnimationTimer movementAnimationTimer;
-    private SpriteSheetAnimationTimer rotationAnimationTimer;
+    private final SpriteSheetAnimationTimer movementAnimationTimer;
+    private final SpriteSheetAnimationTimer rotationAnimationTimer;
 
     public SpriteSheet(Image image, List<Rectangle2D> movementSprites, long movementDuration, List<Rectangle2D> rotationSprites, long rotationDuration) {
     }

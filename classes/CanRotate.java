@@ -3,10 +3,10 @@ package com.example.stickhero.structure;
 import javafx.scene.Node;
 
 public class CanRotate implements RotationAnimator {
-    private double speed;
-    private Node node;
-    private AnimatorEvent before;
-    private AnimatorEvent after;
+    private final double speed;
+    private final Node node;
+    private final AnimatorEvent before;
+    private final AnimatorEvent after;
 
     public CanRotate(Node node, double speed) {
     }

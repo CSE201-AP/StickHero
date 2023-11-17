@@ -1,8 +1,8 @@
 package com.example.stickhero.structure;
 
 public class Stick extends Sprite {
-    private Hero hero;
-    private CollisionTimer collisionTimer;
+    private final Hero hero;
+    private final CollisionTimer collisionTimer;
 
     public Stick(Hero hero, double width) {
     }

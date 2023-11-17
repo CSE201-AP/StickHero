@@ -12,6 +12,8 @@ public class StickHero extends Application {
     private static StickHero instance;
     private static final double WIDTH = 335;
     private static final double HEIGHT = 600;
+
+//    private List<Pannable> environment;
     private Stage stage;
 //    private Hero hero;
 

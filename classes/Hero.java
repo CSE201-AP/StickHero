@@ -5,7 +5,7 @@ public class Hero extends ImageSprite implements Serializable {
     private int cherries = 0;
 
     private int score = 0;
-    private CollisionTimer collisionTimer;
+    private final CollisionTimer collisionTimer;
 
     public void startExtendStick() {
     }
@@ -20,5 +20,17 @@ public class Hero extends ImageSprite implements Serializable {
     }
 
     public void addCherry() {
+    }
+
+    public void increaseScore(int delta) {
+    }
+
+    public int getCherries() {
+    }
+
+    public int getScore(){
+    }
+
+    public Stick getStick(){
     }
 }
