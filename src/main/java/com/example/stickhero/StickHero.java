@@ -49,4 +49,7 @@ public class StickHero extends Application {
             System.exit(1);
         }
     }
+
+//    public Hero getHero(){
+//    }
 }
