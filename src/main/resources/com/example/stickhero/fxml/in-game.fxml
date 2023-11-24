@@ -12,12 +12,12 @@
 
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.stickhero.InGameController">
+            fx:controller="com.example.stickhero.InGameController">
    <children>
-      <AnchorPane BorderPane.alignment="CENTER" onMouseClicked="#onOtherClick">
+      <AnchorPane fx:id="foreground" BorderPane.alignment="CENTER" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" onMouseClicked="#onMouseClicked">
          <children>
-            <Rectangle arcWidth="5.0" height="207.0" layoutX="228.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="74.0" />
-            <Label layoutX="124.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="86.0" style="-fx-background-color: rgba(0, 0, 0, 0.15); -fx-background-radius: 5; -fx-text-fill: white;" text="5" textAlignment="CENTER" textFill="WHITE">
+            <Rectangle fx:id="nextBuilding" arcWidth="5.0" height="207.0" layoutX="228.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="74.0" />
+            <Label fx:id="score" layoutX="124.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="86.0" style="-fx-background-color: rgba(0, 0, 0, 0.15); -fx-background-radius: 5; -fx-text-fill: white;" text="5" textAlignment="CENTER" textFill="WHITE">
                <padding>
                   <Insets left="35.0" right="35.0" />
                </padding>
@@ -25,9 +25,9 @@
                   <Font name="Roboto Bold" size="26.0" />
                </font>
             </Label>
-            <Rectangle fill="RED" height="5.0" layoutX="262.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="7.0" />
-            <Rectangle arcWidth="5.0" height="207.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="74.0" />
-            <Rectangle arcWidth="5.0" height="230.0" layoutX="72.0" layoutY="174.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="4.0" />
+            <Rectangle fx:id="nextPerfectBLock" fill="RED" height="5.0" layoutX="262.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="7.0" />
+            <Rectangle fx:id="currBuilding" arcWidth="5.0" height="207.0" layoutY="405.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="74.0" />
+            <Rectangle fx:id="stick" arcWidth="5.0" height="1.0" layoutX="70.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="4.0" />
             <Label layoutX="86.0" layoutY="117.0" prefHeight="46.0" prefWidth="162.0" text="Hold your finger on screen to stretch out the stick" textAlignment="CENTER" textFill="#737373" wrapText="true">
                <font>
                   <Font name="Roboto" size="12.0" />
@@ -39,7 +39,7 @@
                </image>
             </ImageView>
             <Label layoutX="264.0" layoutY="29.0" text="214" />
-            <ImageView fitHeight="32.0" fitWidth="33.0" layoutX="37.0" layoutY="372.0" preserveRatio="true">
+            <ImageView fx:id="hero" fitHeight="32.0" fitWidth="33.0" layoutX="37.0" layoutY="372.0" preserveRatio="true">
                <image>
                   <Image url="@../images/Hero.png" />
                </image>
