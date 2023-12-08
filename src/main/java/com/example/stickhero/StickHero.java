@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.lang.Math.pow;
+
 public class StickHero extends Application {
     private static final double WIDTH = 335;
     private static final double HEIGHT = 600;
@@ -46,29 +48,23 @@ public class StickHero extends Application {
         stage.setTitle("Stick Hero");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Hero.png"))));
         AnchorPane anchorPane = new AnchorPane();
-        anchorPane.setMaxHeight(250);
-        BackgroundImage backgroundImage1 = new BackgroundImage(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("background.png"))),
-                10
-        );
-        backgroundImage1.setMaxHeight(250);
-        BackgroundImage backgroundImage2 = new BackgroundImage(
-                new Image(Objects.requireNonNull(getClass().getResourceAsStream("background2.png"))),
-                100
-        );
-        backgroundImage2.setMaxHeight(250);
-        anchorPane.getChildren().addAll(backgroundImage1, backgroundImage2);
 
-        backgroundImage1.setOnMouseClicked((MouseEvent e) -> {
-            backgroundImage1.panHorizontal(-450);
-        });
-        backgroundImage2.setOnMouseClicked((MouseEvent e) -> {
-            backgroundImage1.panHorizontal(-450);
-        });
+        for (int i=1; i<3; i++) {
+            BackgroundImage backgroundImage = new BackgroundImage(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("background" + i + ".png"))),
+                    pow(10, i)
+            );
+            AnchorPane.setTopAnchor(backgroundImage, 0D);
+            AnchorPane.setBottomAnchor(backgroundImage, 0D);
+            backgroundImage.setOnMouseClicked((MouseEvent e) -> {
+                backgroundImage.panHorizontal(-450);
+            });
+            anchorPane.getChildren().add(backgroundImage);
+        }
 
         stage.setScene(new Scene(anchorPane));
-        stage.setWidth(900);
-        stage.setHeight(400);
+        stage.setWidth(400);
+        stage.setHeight(271);
         stage.show();
     }
 

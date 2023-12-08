@@ -13,7 +13,7 @@ public class BackgroundImage extends HBox implements Pannable {
     private final MovementAnimator movementAnimator;
 
     public BackgroundImage(Image image, double depth) {
-        movementAnimator = new CanMove(this, depth);
+        movementAnimator = new CanMove(this, 1/depth);
 
         ImageView tile1 = new ImageView(image);
         tile1.fitHeightProperty().bind(this.heightProperty());
@@ -29,6 +29,7 @@ public class BackgroundImage extends HBox implements Pannable {
 
     @Override
     public void panHorizontal(double offset) {
+        System.out.println("offset = " + offset);
         double imageWidth = getBoundsInLocal().getWidth() / 2;
         if (getTranslateX() + offset < -imageWidth) {
             double switchX = -imageWidth;
