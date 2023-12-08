@@ -46,7 +46,7 @@ public class CanScale implements ScaleAnimator {
         before.function();
         double currentW = node.getBoundsInLocal().getWidth(), currentH = node.getBoundsInLocal().getHeight();
         ScaleTransition transition = new ScaleTransition(
-                new Duration(speedMs * Math.max(Math.abs(w-currentW), Math.abs(h-currentH))),
+                new Duration(Math.max(Math.abs(w-currentW), Math.abs(h-currentH))/speedMs),
                 node
         );
         transition.setToX(w/currentW);

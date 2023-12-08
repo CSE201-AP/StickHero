@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -42,36 +43,26 @@ public class StickHero extends Application {
         this.stage = stage;
         stage.setTitle("Stick Hero");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("images/Hero.png")));
-        StackPane stackPane = new StackPane();
-        Image image = new Image(getClass().getResourceAsStream("background.png"));
-        BackgroundImage backgroundImage = new BackgroundImage(image, 1);
-        backgroundImage.setOnMouseClicked(
-                (MouseEvent e) -> {
-                    backgroundImage.panHorizontal(e.getButton() == MouseButton.PRIMARY ? -450 : 450);
-//                    backgroundImage.setTranslateX(backgroundImage.getTranslateX() - 100);
-                }
-        );
+        AnchorPane anchorPane = new AnchorPane();
 //        stackPane.getChildren().add(backgroundImage);
 
-//        Rectangle rectangle = new Rectangle();
-//        rectangle.setHeight(50);
-//        rectangle.setWidth(20);
-//        rectangle.setFill(Color.YELLOW);
-//        RotationAnimator slowRotationAnimator = new CanRotate(rectangle, 20);
-//        RotationAnimator fastRotationAnimator = new CanRotate(rectangle, 2);
-//        rectangle.setOnMouseClicked((e) -> {
-//            System.out.println("(e.getButton() == MouseButton.SECONDARY) = " + (e.getButton() == MouseButton.SECONDARY));
-//            if (e.getButton() == MouseButton.SECONDARY) {
-//                fastRotationAnimator.rotateBy(90);
-//            } else {
-//                slowRotationAnimator.rotateBy(90);
-//            }
-//        });
-//        stackPane.getChildren().add(rectangle);
+        Rectangle rectangle = new Rectangle();
+        rectangle.setHeight(50);
+        rectangle.setWidth(20);
+        rectangle.setFill(Color.YELLOW);
+        RotationAnimator slowRotationAnimator = new CanRotate(rectangle, 1);
+        RotationAnimator fastRotationAnimator = new CanRotate(rectangle, 100);
+        rectangle.setOnMouseClicked((e) -> {
+            System.out.println("(e.getButton() == MouseButton.SECONDARY) = " + (e.getButton() == MouseButton.SECONDARY));
+            if (e.getButton() == MouseButton.SECONDARY) {
+                fastRotationAnimator.rotateBy(90);
+            } else {
+                slowRotationAnimator.rotateBy(90);
+            }
+        });
+        anchorPane.getChildren().add(rectangle);
 
-        stage.setScene(new Scene(backgroundImage));
-        stage.setHeight(271.5);
-        stage.setWidth(400);
+        stage.setScene(new Scene(anchorPane));
 //        backgroundImage.setMaxHeight(271.5);
         stage.show();
     }

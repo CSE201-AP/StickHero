@@ -51,7 +51,7 @@ public class CanRotate implements RotationAnimator {
         before.function();
         setPivot(pivotX, pivotY);
         RotateTransition transition = new RotateTransition(
-                new Duration(speedMs * (angle - node.getRotate())),
+                new Duration((angle - node.getRotate())/speedMs),
                 node
         );
         transition.setToAngle(angle);

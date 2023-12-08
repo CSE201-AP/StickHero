@@ -45,7 +45,12 @@ public class CanMove implements MovementAnimator {
     public void moveTo(Point2D target) {
         before.function();
         TranslateTransition transition = new TranslateTransition(
-                new Duration(speedMs * Math.max(Math.abs(target.getX() - node.getTranslateX()), Math.abs(target.getY() - node.getTranslateY()))),
+                new Duration(
+                        Math.max(
+                                Math.abs(target.getX() - node.getTranslateX()),
+                                Math.abs(target.getY() - node.getTranslateY())
+                        ) / speedMs
+                ),
                 node
         );
         transition.setToX(target.getX());
