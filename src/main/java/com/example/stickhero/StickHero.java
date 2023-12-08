@@ -1,5 +1,6 @@
 package com.example.stickhero;
 
+import com.example.stickhero.environment.Background;
 import com.example.stickhero.environment.BackgroundImage;
 import com.example.stickhero.sprite.CanMove;
 import com.example.stickhero.sprite.MovementAnimator;
@@ -10,12 +11,14 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,20 +51,21 @@ public class StickHero extends Application {
         stage.setTitle("Stick Hero");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Hero.png"))));
         AnchorPane anchorPane = new AnchorPane();
-
-        for (int i=1; i<3; i++) {
+        Background background = new Background();
+        for (int i=0; i<2; i++) {
             BackgroundImage backgroundImage = new BackgroundImage(
-                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("background" + i + ".png"))),
-                    pow(10, i)
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("background" + (i+1) + ".png"))),
+                    (double) 10 /(i+1)
             );
-            AnchorPane.setTopAnchor(backgroundImage, 0D);
-            AnchorPane.setBottomAnchor(backgroundImage, 0D);
-            backgroundImage.setOnMouseClicked((MouseEvent e) -> {
-                backgroundImage.panHorizontal(-450);
-            });
-            anchorPane.getChildren().add(backgroundImage);
+            backgroundImage.minHeightProperty().bind(background.heightProperty());
+            background.getChildren().add(backgroundImage);
         }
+        background.setOnMouseClicked((e) -> {
+            background.panHorizontalRelative(-450);
+        });
 
+        anchorPane.getChildren().add(background);
+        background.maxHeightProperty().bind(stage.heightProperty());
         stage.setScene(new Scene(anchorPane));
         stage.setWidth(400);
         stage.setHeight(271);

@@ -11,9 +11,11 @@ import javafx.scene.layout.HBox;
 
 public class BackgroundImage extends HBox implements Pannable {
     private final MovementAnimator movementAnimator;
+    private final double depth;
 
     public BackgroundImage(Image image, double depth) {
         movementAnimator = new CanMove(this, 1/depth);
+        this.depth = depth;
 
         ImageView tile1 = new ImageView(image);
         tile1.fitHeightProperty().bind(this.heightProperty());
@@ -45,5 +47,10 @@ public class BackgroundImage extends HBox implements Pannable {
         } else {
             movementAnimator.moveBy(new Point2D(offset, 0));
         }
+    }
+
+    @Override
+    public void panHorizontalRelative(double offset) {
+        panHorizontal(offset/depth);
     }
 }
