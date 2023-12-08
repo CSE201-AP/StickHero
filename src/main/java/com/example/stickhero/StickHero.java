@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -69,14 +70,28 @@ public class StickHero extends Application {
 
         Foreground foreground = new Foreground(0.5);
         AnchorPane.setBottomAnchor(foreground, 0D);
+        List<Building> buildings = new ArrayList<>();
         for (int i=0; i<4; i++) {
             Building building = new Building();
+            buildings.add(building);
             foreground.getChildren().add(building);
             building.setLayoutX(100 + i*100);
         }
         Stick stick = new Stick();
+        stick.setLayoutY(-stick.getWidth()/2);
         stick.setLayoutX(100);
         stick.setHandler((e) -> {
+            double stickTipX = stick.localToScene(stick.getBoundsInLocal()).getMaxX();
+            for (Building building: buildings) {
+                Rectangle block = building.getPerfectBlock();
+                Bounds perfectBlockSceneBounds = block.localToScene(block.getBoundsInLocal());
+                double perfectBlockStartX = perfectBlockSceneBounds.getMinX();
+                double perfectBlockEndX = perfectBlockSceneBounds.getMaxX();
+                if (perfectBlockStartX <= stickTipX && stickTipX <= perfectBlockEndX) {
+                    System.out.println("Perfect!");
+                    break;
+                }
+            }
             foreground.panHorizontal(-stick.getScaleY());
         });
         stick.setFill(Color.YELLOW);

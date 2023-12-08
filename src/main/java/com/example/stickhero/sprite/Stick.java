@@ -10,7 +10,7 @@ import javax.swing.*;
 
 public class Stick extends Rectangle implements Sprite {
     // private Hero hero
-    private static final double thickness = 4;
+    private static final double thickness = 3;
     private static final double MAX_HEIGHT = 600D;
     private CollisionTimer collisionTimer;
     private MovementAnimator movementAnimator = new CannotMove(this);
@@ -23,12 +23,6 @@ public class Stick extends Rectangle implements Sprite {
 
     public Stick(){
         super(thickness, 1);
-        rotationAnimator.setBeforeCallback(() -> {
-            System.out.println("Started rotation");
-        });
-        scaleAnimator.setBeforeCallback(() -> {
-            System.out.println("Started scaling");
-        });
 
     }
 
@@ -37,7 +31,6 @@ public class Stick extends Rectangle implements Sprite {
     }
     
     public void startExtendStick() {
-        System.out.println("getHeight()*getScaleY() = " + getHeight() * getScaleY());
         scaleAnimator.scaleTo(thickness, Stick.MAX_HEIGHT, 0, -getHeight()/2);
     }
 

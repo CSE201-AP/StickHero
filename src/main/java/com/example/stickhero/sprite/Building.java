@@ -34,6 +34,10 @@ public class Building extends StackPane implements Sprite {
         getChildren().addAll(building, perfectBlock);
     }
 
+    public Rectangle getPerfectBlock() {
+        return perfectBlock;
+    }
+
     @Override
     public MovementAnimator getMovementAnimator() {
         return movementAnimator;
