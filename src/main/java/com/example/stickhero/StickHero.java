@@ -1,5 +1,6 @@
 package com.example.stickhero;
 
+import com.example.stickhero.environment.BackgroundImage;
 import com.example.stickhero.sprite.CanMove;
 import com.example.stickhero.sprite.MovementAnimator;
 import javafx.application.Application;
@@ -7,13 +8,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 public class StickHero extends Application {
     private static final double WIDTH = 335;
@@ -40,38 +44,31 @@ public class StickHero extends Application {
     public void start(Stage stage) {
         this.stage = stage;
         stage.setTitle("Stick Hero");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("images/Hero.png")));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Hero.png"))));
         AnchorPane anchorPane = new AnchorPane();
-//        stackPane.getChildren().add(backgroundImage);
+        anchorPane.setMaxHeight(250);
+        BackgroundImage backgroundImage1 = new BackgroundImage(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("background.png"))),
+                10
+        );
+        backgroundImage1.setMaxHeight(250);
+        BackgroundImage backgroundImage2 = new BackgroundImage(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("background2.png"))),
+                100
+        );
+        backgroundImage2.setMaxHeight(250);
+        anchorPane.getChildren().addAll(backgroundImage1, backgroundImage2);
 
-        Rectangle obstacle = new Rectangle(30, 100);
-        obstacle.setTranslateX(100);
-        obstacle.setFill(Color.RED);
-
-        Rectangle rectangle = new Rectangle(20, 50);
-        rectangle.setFill(Color.GREEN);
-
-        CollisionTimer collisionTimer = new CollisionTimer(rectangle, Map.of(
-                obstacle, () -> {
-                    rectangle.setFill(Color.YELLOW);
-                },
-                rectangle, () -> {
-                    rectangle.setFill(Color.GREEN);
-                }
-        ));
-        collisionTimer.start();
-
-        MovementAnimator movementAnimator = new CanMove(rectangle, 0.1);
-        movementAnimator.moveBy(new Point2D(
-                300,
-                50
-        ));
-
-        anchorPane.getChildren().addAll(obstacle, rectangle);
+        backgroundImage1.setOnMouseClicked((MouseEvent e) -> {
+            backgroundImage1.panHorizontal(-450);
+        });
+        backgroundImage2.setOnMouseClicked((MouseEvent e) -> {
+            backgroundImage1.panHorizontal(-450);
+        });
 
         stage.setScene(new Scene(anchorPane));
-        stage.setWidth(500);
-        stage.setHeight(300);
+        stage.setWidth(900);
+        stage.setHeight(400);
         stage.show();
     }
 
