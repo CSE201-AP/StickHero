@@ -2,9 +2,14 @@ package com.example.stickhero;
 
 import com.example.stickhero.environment.Background;
 import com.example.stickhero.environment.BackgroundImage;
+import com.example.stickhero.environment.Foreground;
+import com.example.stickhero.sprite.Building;
 import com.example.stickhero.sprite.CanMove;
 import com.example.stickhero.sprite.MovementAnimator;
+import com.example.stickhero.sprite.Stick;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
@@ -51,6 +56,7 @@ public class StickHero extends Application {
         stage.setTitle("Stick Hero");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Hero.png"))));
         AnchorPane anchorPane = new AnchorPane();
+
         Background background = new Background();
         for (int i=0; i<2; i++) {
             BackgroundImage backgroundImage = new BackgroundImage(
@@ -60,15 +66,38 @@ public class StickHero extends Application {
             backgroundImage.minHeightProperty().bind(background.heightProperty());
             background.getChildren().add(backgroundImage);
         }
-        background.setOnMouseClicked((e) -> {
-            background.panHorizontalRelative(-450);
+
+        Foreground foreground = new Foreground(0.5);
+        AnchorPane.setBottomAnchor(foreground, 0D);
+        for (int i=0; i<4; i++) {
+            Building building = new Building();
+            foreground.getChildren().add(building);
+            building.setLayoutX(100 + i*100);
+        }
+        Stick stick = new Stick();
+        stick.setLayoutX(100);
+        stick.setHandler((e) -> {
+            foreground.panHorizontal(-stick.getScaleY());
+        });
+        stick.setFill(Color.YELLOW);
+//        stick.setTranslateX(100);
+//        stick.setTranslateY(100);
+        foreground.getChildren().add(stick);
+
+        anchorPane.setOnMousePressed((e) -> {
+            stick.startExtendStick();
+        });
+        anchorPane.setOnMouseReleased((e) -> {
+            stick.stopExtendStick();
         });
 
-        anchorPane.getChildren().add(background);
-        background.maxHeightProperty().bind(stage.heightProperty());
+        anchorPane.getChildren().addAll(background, foreground);
+        background.maxHeightProperty().bind(anchorPane.heightProperty());
+        anchorPane.maxHeightProperty().bind(stage.heightProperty());
+        anchorPane.minHeightProperty().bind(stage.heightProperty());
         stage.setScene(new Scene(anchorPane));
-        stage.setWidth(400);
-        stage.setHeight(271);
+        stage.setWidth(335);
+        stage.setHeight(600);
         stage.show();
     }
 

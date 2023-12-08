@@ -2,6 +2,7 @@ package com.example.stickhero.sprite;
 
 import com.example.stickhero.Callback;
 import javafx.animation.Interpolator;
+import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,6 +16,7 @@ public class CanMove implements MovementAnimator {
     private Callback before;
     private EventHandler<ActionEvent> after;
     private Interpolator interpolator = Interpolator.LINEAR;
+    TranslateTransition transition;
 
     public CanMove(Node node, double speedMs) {
         this.node = node;
@@ -44,7 +46,7 @@ public class CanMove implements MovementAnimator {
     @Override
     public void moveTo(Point2D target) {
         before.function();
-        TranslateTransition transition = new TranslateTransition(
+        transition = new TranslateTransition(
                 new Duration(
                         Math.max(
                                 Math.abs(target.getX() - node.getTranslateX()),
@@ -58,5 +60,12 @@ public class CanMove implements MovementAnimator {
         transition.setInterpolator(interpolator);
         transition.setOnFinished(after);
         transition.play();
+    }
+
+    @Override
+    public void interrupt() {
+        if (transition != null && transition.getStatus() == ScaleTransition.Status.RUNNING) {
+            transition.stop();
+        }
     }
 }

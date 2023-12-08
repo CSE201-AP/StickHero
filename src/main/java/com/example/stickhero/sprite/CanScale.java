@@ -6,10 +6,12 @@ import javafx.animation.ScaleTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 public class CanScale implements ScaleAnimator {
     private final double speedMs;
+    private ScaleTransition transition;
     private final Node node;
     private Callback before;
     private EventHandler<ActionEvent> after;
@@ -34,18 +36,30 @@ public class CanScale implements ScaleAnimator {
         this.interpolator = interpolator;
     }
 
-    @Override
-    public void scaleBy(double alphaW, double alphaH) {
-        double w = node.getBoundsInLocal().getWidth() * (1 + alphaW);
-        double h = node.getBoundsInLocal().getHeight() * (1 + alphaH);
-        scaleTo(w, h);
+    private void setPivot(double pivotX, double pivotY) {
+        node.getTransforms().add(new Translate(pivotX+node.getTranslateX(), pivotY+node.getTranslateY()));
+        node.setTranslateX(-pivotX);
+        node.setTranslateY(-pivotY);
     }
 
     @Override
-    public void scaleTo(double w, double h) {
+    public void scaleBy(double alphaW, double alphaH) {
+        scaleBy(alphaW, alphaH, 0, 0);
+    }
+
+    @Override
+    public void scaleBy(double alphaW, double alphaH, double pivotX, double pivotY) {
+        double w = node.getBoundsInLocal().getWidth() * (1 + alphaW);
+        double h = node.getBoundsInLocal().getHeight() * (1 + alphaH);
+        scaleTo(w, h, pivotX, pivotY);
+    }
+
+    @Override
+    public void scaleTo(double w, double h, double pivotX, double pivotY) {
         before.function();
+        setPivot(pivotX, pivotY);
         double currentW = node.getBoundsInLocal().getWidth(), currentH = node.getBoundsInLocal().getHeight();
-        ScaleTransition transition = new ScaleTransition(
+        transition = new ScaleTransition(
                 new Duration(Math.max(Math.abs(w-currentW), Math.abs(h-currentH))/speedMs),
                 node
         );
@@ -54,5 +68,17 @@ public class CanScale implements ScaleAnimator {
         transition.setInterpolator(interpolator);
         transition.setOnFinished(after);
         transition.play();
+    }
+
+    @Override
+    public void scaleTo(double w, double h) {
+        scaleTo(w, h, 0, 0);
+    }
+
+    @Override
+    public void interrupt() {
+        if (transition != null && transition.getStatus() == ScaleTransition.Status.RUNNING) {
+            transition.stop();
+        }
     }
 }

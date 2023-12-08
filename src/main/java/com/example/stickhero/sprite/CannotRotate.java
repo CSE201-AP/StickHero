@@ -40,4 +40,9 @@ public class CannotRotate implements RotationAnimator {
     public void setBeforeCallback(Callback before) {
 
     }
+
+    @Override
+    public void interrupt() {
+
+    }
 }

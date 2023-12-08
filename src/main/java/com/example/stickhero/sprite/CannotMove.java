@@ -30,4 +30,9 @@ public class CannotMove implements MovementAnimator {
     public void setBeforeCallback(Callback before) {
 
     }
+
+    @Override
+    public void interrupt() {
+
+    }
 }

@@ -8,8 +8,13 @@ import javafx.geometry.Point2D;
 
 public interface MovementAnimator {
     void moveBy(Point2D offset);
+
     void moveTo(Point2D target);
+
+    void interrupt();
+
     void setAfterHandler(EventHandler<ActionEvent> handler);
+
     void setBeforeCallback(Callback before);
 }
 

@@ -29,4 +29,19 @@ public class CannotScale implements ScaleAnimator {
     public void setBeforeCallback(Callback before) {
 
     }
+
+    @Override
+    public void scaleBy(double alphaW, double alphaH, double pivotX, double pivotY) {
+        throw new UnsupportedOperationException("Can't scale object "+ node.toString() +" using CannotScale strategy");
+    }
+
+    @Override
+    public void scaleTo(double w, double h, double pivotX, double pivotY) {
+        throw new UnsupportedOperationException("Can't scale object "+ node.toString() +" using CannotScale strategy");
+    }
+
+    @Override
+    public void interrupt() {
+
+    }
 }

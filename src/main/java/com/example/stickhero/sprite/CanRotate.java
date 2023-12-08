@@ -3,6 +3,7 @@ package com.example.stickhero.sprite;
 import com.example.stickhero.Callback;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -15,6 +16,7 @@ public class CanRotate implements RotationAnimator {
     private Callback before;
     private EventHandler<ActionEvent> after;
     private Interpolator interpolator = Interpolator.LINEAR;
+    private RotateTransition transition;
 
     public CanRotate(Node node, double speedMs) {
         this.node = node;
@@ -50,7 +52,7 @@ public class CanRotate implements RotationAnimator {
     public void rotateTo(double angle, double pivotX, double pivotY) {
         before.function();
         setPivot(pivotX, pivotY);
-        RotateTransition transition = new RotateTransition(
+        transition = new RotateTransition(
                 new Duration((angle - node.getRotate())/speedMs),
                 node
         );
@@ -70,5 +72,12 @@ public class CanRotate implements RotationAnimator {
     public void rotateBy(double theta, double pivotX, double pivotY) {
         double angle = node.getRotate() + theta;
         rotateTo(angle, pivotX, pivotY);
+    }
+
+    @Override
+    public void interrupt() {
+        if (transition != null && transition.getStatus() == ScaleTransition.Status.RUNNING) {
+            transition.stop();
+        }
     }
 }
