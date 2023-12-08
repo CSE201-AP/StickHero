@@ -1,32 +1,25 @@
 package com.example.stickhero;
 
-import com.example.stickhero.environment.BackgroundImage;
-import com.example.stickhero.sprite.*;
+import com.example.stickhero.sprite.CanMove;
+import com.example.stickhero.sprite.MovementAnimator;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class StickHero extends Application {
-    private static StickHero instance;
     private static final double WIDTH = 335;
     private static final double HEIGHT = 600;
-
-//    private List<Pannable> environment;
+    private static StickHero instance;
+    //    private List<Pannable> environment;
     private Stage stage;
 //    private Hero hero;
 
@@ -34,10 +27,15 @@ public class StickHero extends Application {
         launch(args);
     }
 
+    public static StickHero getInstance() {
+        return instance;
+    }
+
     @Override
     public void init() {
         instance = this;
     }
+
     @Override
     public void start(Stage stage) {
         this.stage = stage;
@@ -46,29 +44,35 @@ public class StickHero extends Application {
         AnchorPane anchorPane = new AnchorPane();
 //        stackPane.getChildren().add(backgroundImage);
 
-        Rectangle rectangle = new Rectangle();
-        rectangle.setHeight(50);
-        rectangle.setWidth(20);
-        rectangle.setFill(Color.YELLOW);
-        RotationAnimator slowRotationAnimator = new CanRotate(rectangle, 1);
-        RotationAnimator fastRotationAnimator = new CanRotate(rectangle, 100);
-        rectangle.setOnMouseClicked((e) -> {
-            System.out.println("(e.getButton() == MouseButton.SECONDARY) = " + (e.getButton() == MouseButton.SECONDARY));
-            if (e.getButton() == MouseButton.SECONDARY) {
-                fastRotationAnimator.rotateBy(90);
-            } else {
-                slowRotationAnimator.rotateBy(90);
-            }
-        });
-        anchorPane.getChildren().add(rectangle);
+        Rectangle obstacle = new Rectangle(30, 100);
+        obstacle.setTranslateX(100);
+        obstacle.setFill(Color.RED);
+
+        Rectangle rectangle = new Rectangle(20, 50);
+        rectangle.setFill(Color.GREEN);
+
+        CollisionTimer collisionTimer = new CollisionTimer(rectangle, Map.of(
+                obstacle, () -> {
+                    rectangle.setFill(Color.YELLOW);
+                },
+                rectangle, () -> {
+                    rectangle.setFill(Color.GREEN);
+                }
+        ));
+        collisionTimer.start();
+
+        MovementAnimator movementAnimator = new CanMove(rectangle, 0.1);
+        movementAnimator.moveBy(new Point2D(
+                300,
+                50
+        ));
+
+        anchorPane.getChildren().addAll(obstacle, rectangle);
 
         stage.setScene(new Scene(anchorPane));
-//        backgroundImage.setMaxHeight(271.5);
+        stage.setWidth(500);
+        stage.setHeight(300);
         stage.show();
-    }
-
-    public static StickHero getInstance() {
-        return instance;
     }
 
     public void loadFXMLScene(String resource) {
