@@ -1,9 +1,9 @@
 package com.example.stickhero.sprite;
 
+import com.example.stickhero.Callback;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;

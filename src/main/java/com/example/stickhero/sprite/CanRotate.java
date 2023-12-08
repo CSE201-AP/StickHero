@@ -1,13 +1,11 @@
 package com.example.stickhero.sprite;
 
+import com.example.stickhero.Callback;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.Node;
-import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
@@ -38,10 +36,9 @@ public class CanRotate implements RotationAnimator {
     }
 
     private void setPivot(double pivotX, double pivotY) {
+        node.getTransforms().add(new Translate(pivotX+node.getTranslateX(), pivotY+node.getTranslateY()));
         node.setTranslateX(-pivotX);
         node.setTranslateY(-pivotY);
-        Translate temp = new Translate(pivotX, pivotY);
-        node.getTransforms().add(temp);
     }
 
     @Override
@@ -58,11 +55,8 @@ public class CanRotate implements RotationAnimator {
                 node
         );
         transition.setToAngle(angle);
-        System.out.println(Rotate.Z_AXIS);
-//        transition.setAxis(new Point3D(0, pivotX, pivotY));
-//        node.setRotationAxis(new Point3D(0, 1, 0));
         transition.setInterpolator(interpolator);
-        transition.setOnFinished(after);
+        transition.setOnFinished(this.after);
         transition.play();
     }
 

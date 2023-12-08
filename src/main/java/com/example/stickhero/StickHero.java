@@ -7,9 +7,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -38,85 +42,38 @@ public class StickHero extends Application {
         this.stage = stage;
         stage.setTitle("Stick Hero");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("images/Hero.png")));
-//        loadFXMLScene("fxml/main-menu.fxml");
-
-//        Rectangle rect = new Rectangle();
-//        rect.setWidth(10);
-//        rect.setHeight(100);
-//        rect.setFill(Color.BLUE);
-//        MovementAnimator movementAnimator = new CanMove(
-//                rect,
-//                50,
-//                () -> {},
-//                (ActionEvent e) -> {
-//                    System.out.println(rect.getTranslateX() + " " + rect.getTranslateY());
-//                }
-//        );
-
-//        Rectangle rect2 = new Rectangle();
-//        rect2.setHeight(100);
-//        rect2.setWidth(10);
-//        rect2.setFill(Color.RED);
-//        MovementAnimator movementAnimator2 = new CanMove(
-//                rect2,
-//                50,
-//                () -> {},
-//                (ActionEvent e) -> {
-//                    System.out.println(rect.getTranslateX() + " " + rect.getTranslateY());
-//                }
-//        );
-
-//        List<Rectangle2D> sprites = new ArrayList<Rectangle2D>(List.of(
-//                new Rectangle2D(0, 0,130,130),
-//                new Rectangle2D(130, 0,130,130),
-//                new Rectangle2D(0, 130,130,130),
-//                new Rectangle2D(130, 130,130,130)
-//        ));
-//        HBox hbox = new HBox();
-//        SpriteSheet root = new SpriteSheet(
-//                new Image(getClass().getResourceAsStream("spritesheet.png")),
-//                sprites,
-//                sprites,
-//                2_00_000_000,
-//                2_00_000_000
-//        );
-//        hbox.getChildren().addAll(rect, rect2);
-//        stage.setScene(new Scene(hbox));
-//        root.animateMovement();
-//        root.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                root.stopAnimations();
-//            }
-//        });
-//        hbox.setAlignment(Pos.CENTER);
+        StackPane stackPane = new StackPane();
         Image image = new Image(getClass().getResourceAsStream("background.png"));
-        BackgroundImage backgroundImage = new BackgroundImage(image, 4);
-        backgroundImage.setMaxSize(400, 271.5);
-        backgroundImage.setMinSize(400, 271.5);
-        backgroundImage.setPrefSize(400, 271.5);
-        stage.setScene(new Scene(backgroundImage));
-        stage.show();
-        stage.setHeight(271.5);
-        stage.setWidth(400);
-        stage.setResizable(false);
-//        backgroundImage.setTranslateX(-500);
+        BackgroundImage backgroundImage = new BackgroundImage(image, 1);
         backgroundImage.setOnMouseClicked(
-                (e) -> {
-                    System.out.println("Panning");
+                (MouseEvent e) -> {
+                    backgroundImage.panHorizontal(e.getButton() == MouseButton.PRIMARY ? -450 : 450);
 //                    backgroundImage.setTranslateX(backgroundImage.getTranslateX() - 100);
-                    backgroundImage.panHorizontal(-700);
                 }
         );
-//        backgroundImage.panHorizontal(100);
-//        scaleAnimator.scaleBy(0.2, 1);
-//        scaleAnimator2.scaleTo(12, 200);
-//        movementAnimator.moveBy(new Point2D(100, 100));
-//        movementAnimator2.moveTo(new Point2D(rect2.getTranslateX() + 100, rect2.getTranslateY() + 100));
-//        rotationAnimator.rotateBy(90, -rect.getWidth()/2, -rect.getHeight()/2);
-//        rotationAnimator2.rotateTo(rect2.getRotate()+90, -rect2.getWidth()/2, -rect2.getHeight()/2);
-//        rotationAnimator.rotateBy(90);
-//        rotationAnimator2.rotateTo(rect2.getRotate()+90);
+//        stackPane.getChildren().add(backgroundImage);
+
+//        Rectangle rectangle = new Rectangle();
+//        rectangle.setHeight(50);
+//        rectangle.setWidth(20);
+//        rectangle.setFill(Color.YELLOW);
+//        RotationAnimator slowRotationAnimator = new CanRotate(rectangle, 20);
+//        RotationAnimator fastRotationAnimator = new CanRotate(rectangle, 2);
+//        rectangle.setOnMouseClicked((e) -> {
+//            System.out.println("(e.getButton() == MouseButton.SECONDARY) = " + (e.getButton() == MouseButton.SECONDARY));
+//            if (e.getButton() == MouseButton.SECONDARY) {
+//                fastRotationAnimator.rotateBy(90);
+//            } else {
+//                slowRotationAnimator.rotateBy(90);
+//            }
+//        });
+//        stackPane.getChildren().add(rectangle);
+
+        stage.setScene(new Scene(backgroundImage));
+        stage.setHeight(271.5);
+        stage.setWidth(400);
+//        backgroundImage.setMaxHeight(271.5);
+        stage.show();
     }
 
     public static StickHero getInstance() {

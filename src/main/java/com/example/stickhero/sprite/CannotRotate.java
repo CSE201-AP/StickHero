@@ -1,8 +1,8 @@
 package com.example.stickhero.sprite;
 
+import com.example.stickhero.Callback;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 
 public class CannotRotate implements RotationAnimator {

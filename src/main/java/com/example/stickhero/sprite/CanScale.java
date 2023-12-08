@@ -1,5 +1,6 @@
 package com.example.stickhero.sprite;
 
+import com.example.stickhero.Callback;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.event.ActionEvent;
@@ -42,6 +43,7 @@ public class CanScale implements ScaleAnimator {
 
     @Override
     public void scaleTo(double w, double h) {
+        before.function();
         double currentW = node.getBoundsInLocal().getWidth(), currentH = node.getBoundsInLocal().getHeight();
         ScaleTransition transition = new ScaleTransition(
                 new Duration(speedMs * Math.max(Math.abs(w-currentW), Math.abs(h-currentH))),

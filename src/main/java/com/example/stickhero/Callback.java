@@ -1,4 +1,4 @@
-package com.example.stickhero.sprite;
+package com.example.stickhero;
 
 public interface Callback {
     void function();
