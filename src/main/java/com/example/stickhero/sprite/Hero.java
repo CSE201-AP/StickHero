@@ -31,10 +31,19 @@ public class Hero extends ImageSprite {
 
     public void flip() {
         if (getTranslateY() == 0) {
+            System.out.println("First flip");
+            System.out.println(getTranslateX());
+            System.out.println(getTranslateY());
             double height = getBoundsInLocal().getHeight();
             getTransforms().add(new Translate(0, -height / 2));
             setTranslateX(0);
             setTranslateY(height / 2);
+            System.out.println(getTranslateX());
+            System.out.println(getTranslateY());
+        } else {
+            System.out.println("Later flip");
+            System.out.println(getTranslateX());
+            System.out.println(getTranslateY());
         }
         setScaleY(-getScaleY());
     }

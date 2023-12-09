@@ -11,7 +11,6 @@ import javafx.scene.shape.Rectangle;
 import javax.swing.*;
 
 public class Stick extends Rectangle implements Sprite {
-    // private Hero hero
     private static final double thickness = 3;
     private static final double MAX_HEIGHT = 600D;
     private CollisionTimer collisionTimer;
@@ -43,7 +42,6 @@ public class Stick extends Rectangle implements Sprite {
     }
 
     public void topple(){
-        System.out.println("Toppling");
         rotationAnimator.rotateBy(90, 0, -getHeight()/2);
         Sound.getSound("fall").play();
     }

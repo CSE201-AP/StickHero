@@ -59,29 +59,31 @@
                     </ImageView>
                 </graphic>
             </Button>
-            <ImageView fitHeight="18.0" fitWidth="28.0" layoutX="291.0" layoutY="23.0">
-                <image>
-                    <Image url="@../images/Cherry.png" />
-                </image>
-            </ImageView>
-            <Label layoutX="263.0" layoutY="24.0" text="214" />
-            <Label layoutX="109.0" layoutY="338.0" text="REVIVE?">
-                <font>
-                    <Font name="Roboto Bold" size="32.0" />
-                </font>
-            </Label>
-            <Button layoutX="99.0" layoutY="388.0" mnemonicParsing="false" onAction="#onReviveButtonClicked" prefHeight="72.0" prefWidth="140.0" style="-fx-font-size: 30; -fx-background-color: #dde3ea; -fx-border-color: #000000; -fx-background-radius: 10; -fx-border-radius: 10; -fx-text-fill: #000000;" text="x 5" textFill="RED">
-                <graphic>
-                    <ImageView fitHeight="35.0" fitWidth="54.0">
-                        <image>
-                            <Image url="@../images/Cherry.png" />
-                        </image>
-                    </ImageView>
-                </graphic>
-                <font>
-                    <Font name="Roboto" size="24.0" />
-                </font>
-            </Button>
+            <AnchorPane>
+                <ImageView fitHeight="18.0" fitWidth="28.0" layoutX="291.0" layoutY="23.0">
+                    <image>
+                        <Image url="@../images/Cherry.png" />
+                    </image>
+                </ImageView>
+                <Label layoutX="263.0" layoutY="24.0" text="214" />
+                <Label layoutX="109.0" layoutY="338.0" text="REVIVE?">
+                    <font>
+                        <Font name="Roboto Bold" size="32.0" />
+                    </font>
+                </Label>
+                <Button layoutX="99.0" layoutY="388.0" mnemonicParsing="false" onAction="#onReviveButtonClicked" prefHeight="72.0" prefWidth="140.0" style="-fx-font-size: 30; -fx-background-color: #dde3ea; -fx-border-color: #000000; -fx-background-radius: 10; -fx-border-radius: 10; -fx-text-fill: #000000;" text="x 5" textFill="RED">
+                    <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="54.0">
+                            <image>
+                                <Image url="@../images/Cherry.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <font>
+                        <Font name="Roboto" size="24.0" />
+                    </font>
+                </Button>
+            </AnchorPane>
             <Button layoutX="170.0" layoutY="499.0" mnemonicParsing="false" onAction="#onRestartButtonClicked" prefHeight="54.0" prefWidth="54.0" style="-fx-background-color: rgba(0, 0, 0, 0);">
                 <graphic>
                     <ImageView fitHeight="65.0" fitWidth="65.0">

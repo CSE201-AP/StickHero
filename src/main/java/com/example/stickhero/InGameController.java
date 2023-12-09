@@ -23,6 +23,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Translate;
 
 import java.util.*;
 
@@ -44,6 +45,7 @@ public class InGameController {
         @Override
         public void handle(ActionEvent actionEvent) {
 //            foreground.setVisible(false);
+
             inGameScreen.setVisible(false);
             gameOver.setVisible(true);
         }
@@ -66,13 +68,16 @@ public class InGameController {
     private final EventHandler<ActionEvent> onStickToppleEvent = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
+            System.out.println("Stick toppled");
             double stickTipX = foreground.localToScene(hero.getStick().getBoundsInParent()).getMaxX();
             Building lastBuilding = buildings.get(buildings.size() - 1);
             boolean landed = scenePointAboveBuilding(stickTipX, lastBuilding);
             if (landed) {
+                System.out.println("Landed");
                 double difference = lastBuilding.localToScene(lastBuilding.getBoundsInLocal()).getMaxX() - STARTX;
                 hero.getMovementAnimator().moveBy(new Point2D(difference, 0));
                 background.panHorizontal(-difference);
+                System.out.println("Panned");
                 Bounds perfectBlockInScene = lastBuilding.localToScene(lastBuilding.getPerfectBlock().getBoundsInParent());
                 if (perfectBlockInScene.contains(stickTipX, perfectBlockInScene.getCenterY())) {
                     hero.increaseScore(1);
@@ -82,6 +87,7 @@ public class InGameController {
 //                    createCherry();
 //                }
             } else {
+                System.out.println("Didn't land");
                 hero.getMovementAnimator().moveBy(new Point2D(hero.getStick().getScaleY() + hero.getFitWidth() / 2, 0));
                 hero.setDying(true);
             }
@@ -93,11 +99,9 @@ public class InGameController {
         gameOver.setVisible(false);
         pauseMenu.setVisible(false);
         if (app.getHero() == null) {
-            System.out.println("Creating new background");
             createBackground();
             hero = createHero();
             app.setHero(hero);
-            System.out.println("Creating buildings");
             createBuildings(2);
             hero.scoreProperty().addListener((observable, oldValue, newValue) -> {
                 scoreLabel.setText(newValue.toString());
@@ -107,7 +111,6 @@ public class InGameController {
             });
             foreground.getChildren().add(hero);
         }
-        System.out.println("Setting labels");
         scoreLabel.setText(Integer.toString(hero.getScore()));
         cherriesLabel.setText(Integer.toString(hero.getCherries()));
     }
@@ -192,6 +195,7 @@ public class InGameController {
     }    private final EventHandler<ActionEvent> onMovementFinishedEvent = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent actionEvent) {
+            System.out.println("Movement finished");
             Building lastBuilding = buildings.get(buildings.size() - 1);
             hero.getStick().getRotationAnimator().getAfterHandlers().remove(onStickToppleEvent);
             if (hero.isDying()) {
@@ -228,8 +232,8 @@ public class InGameController {
                 buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX(),
                 buildings.get(buildings.size() - 1).getBoundsInParent().getMinX() - cherry.getFitWidth()
         );
-        System.out.println("buildings.get(buildings.size() - 1).getBoundsInParent().getMinX() = " + buildings.get(buildings.size() - 1).getBoundsInParent().getMinX());
-        System.out.println("(cherry.getFitWidth() + buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX()) = " + (cherry.getFitWidth() + buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX()));
+//        System.out.println("buildings.get(buildings.size() - 1).getBoundsInParent().getMinX() = " + buildings.get(buildings.size() - 1).getBoundsInParent().getMinX());
+//        System.out.println("(cherry.getFitWidth() + buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX()) = " + (cherry.getFitWidth() + buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX()));
 
         Rectangle rectangle = new Rectangle(
                 buildings.get(buildings.size() - 1).getBoundsInParent().getMinX() - cherry.getFitWidth() - buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX(),
@@ -341,7 +345,6 @@ public class InGameController {
         if (hero.getStick() == null) return;
         if (hero.isDying()) return;
         if (hero.getMovementAnimator().getStatus() != Animation.Status.RUNNING && hero.getStick().getRotationAnimator().getStatus() != Animation.Status.RUNNING) {
-            System.out.println("Stopping extension");
             hero.getStick().stopExtendStick();
         }
     }
@@ -357,16 +360,25 @@ public class InGameController {
 
     @FXML
     public void onReviveButtonClicked(ActionEvent actionEvent) {
+        if (revived) onHomeButtonClicked(actionEvent);
+        revived = true;
         gameOver.setVisible(false);
         foreground.setVisible(true);
         inGameScreen.setVisible(true);
-        System.out.println(foreground.getChildren().contains(hero));
-//        hero.getMovementAnimator().getAfterHandlers().remove(onDeathEvent);
-        hero.setLayoutX(getLocalInForeground(STARTX));
+        hero.getMovementAnimator().setSpeedMs(Hero.SPEED);
+//        System.out.println(foreground.getChildren().contains(hero));
+        hero.getMovementAnimator().getAfterHandlers().remove(onDeathEvent);
         foreground.getChildren().remove(hero.getStick());
-        hero.setLayoutY(-hero.getFitHeight());
-        hero.setTranslateX(-Hero.WIDTH);
+        hero.setTranslateX(0);
+        hero.getTransforms().clear();
         hero.setTranslateY(0);
+        if (hero.getScaleY() < 0) {
+            hero.flip();
+        }
+        hero.setTranslateX(-hero.getFitWidth());
+        hero.setLayoutX(getLocalInForeground(STARTX));
+        hero.setLayoutY(-hero.getFitHeight());
+        hero.getMovementAnimator().getAfterHandlers().add(onMovementFinishedEvent);
         hero.setStick(null);
         hero.setDying(false);
     }
@@ -374,6 +386,7 @@ public class InGameController {
     @FXML
     public void onRestartButtonClicked(ActionEvent actionEvent) {
         app.setHero(null);
+        revived = false;
         app.loadFXMLScene("fxml/in-game.fxml");
     }
 
