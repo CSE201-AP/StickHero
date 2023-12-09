@@ -88,4 +88,8 @@ public class Hero extends ImageSprite {
     public boolean isDying() {
         return dying;
     }
+
+    public void setCherriesProperty(int cherries) {
+        cherriesProperty.set(cherries);
+    }
 }

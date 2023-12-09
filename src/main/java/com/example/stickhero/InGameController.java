@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Translate;
 
+import java.io.IOException;
 import java.util.*;
 
 public class InGameController {
@@ -38,18 +39,13 @@ public class InGameController {
     @FXML
     public Label prevScore;
     @FXML
+    public AnchorPane reviveOption;
+    @FXML
+    public Label cherriesCollected;
+    @FXML
     private AnchorPane inGameScreen;
     @FXML
     private AnchorPane gameOver;
-    private final EventHandler<ActionEvent> onDeathEvent = new EventHandler<ActionEvent>() {
-        @Override
-        public void handle(ActionEvent actionEvent) {
-//            foreground.setVisible(false);
-
-            inGameScreen.setVisible(false);
-            gameOver.setVisible(true);
-        }
-    };
     @FXML
     private Label scoreLabel;
     @FXML
@@ -65,6 +61,25 @@ public class InGameController {
 //    @FXML
 //    private static final Double HEIGHT = Building.HEIGHT;
     private List<Building> buildings = new ArrayList<>();
+
+    private final EventHandler<ActionEvent> onDeathEvent = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            Progress progress = StickHero.getInstance().getProgress();
+            progress.setPastScore(hero.getScore());
+            progress.setHighScore(Math.max(hero.getScore(), progress.getHighScore()));
+            progress.setCherries(hero.getCherries());
+            inGameScreen.setVisible(false);
+            gameOver.setVisible(true);
+            prevScore.setText(String.valueOf(progress.getPastScore()));
+            highScore.setText(String.valueOf(progress.getHighScore()));
+            cherriesCollected.setText(String.valueOf(progress.getCherries()));
+            if (Integer.parseInt(cherriesCollected.getText()) < 5){
+                reviveOption.setVisible(false);
+            }
+        }
+    };
+
     private final EventHandler<ActionEvent> onStickToppleEvent = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
@@ -96,6 +111,7 @@ public class InGameController {
 
     public void initialize() {
         app = StickHero.getInstance();
+        reviveOption.setVisible(true);
         gameOver.setVisible(false);
         pauseMenu.setVisible(false);
         if (app.getHero() == null) {
@@ -111,6 +127,8 @@ public class InGameController {
             });
             foreground.getChildren().add(hero);
         }
+        Progress progress = app.getProgress();
+        hero.setCherriesProperty(progress.getCherries());
         scoreLabel.setText(Integer.toString(hero.getScore()));
         cherriesLabel.setText(Integer.toString(hero.getCherries()));
     }
@@ -164,9 +182,9 @@ public class InGameController {
         }
         AnchorPane.setBottomAnchor(background, 0D);
         AnchorPane.setTopAnchor(background, 0D);
-        AudioClip backgroundSound = Sound.getSound("bg_country");
-        backgroundSound.setCycleCount(AudioClip.INDEFINITE);
-        backgroundSound.play();
+//        AudioClip backgroundSound = Sound.getSound("bg_country");
+//        backgroundSound.setCycleCount(AudioClip.INDEFINITE);
+//        backgroundSound.play();
     }
 
     private Hero createHero() {
@@ -360,7 +378,6 @@ public class InGameController {
 
     @FXML
     public void onReviveButtonClicked(ActionEvent actionEvent) {
-        if (revived) onHomeButtonClicked(actionEvent);
         revived = true;
         gameOver.setVisible(false);
         foreground.setVisible(true);
@@ -381,6 +398,7 @@ public class InGameController {
         hero.getMovementAnimator().getAfterHandlers().add(onMovementFinishedEvent);
         hero.setStick(null);
         hero.setDying(false);
+        reviveOption.setVisible(false);
     }
 
     @FXML
@@ -417,7 +435,12 @@ public class InGameController {
     }
 
     @FXML
-    public void onSaveAndExitButtonClick(ActionEvent actionEvent) {
+    public void onSaveAndExitButtonClick(ActionEvent actionEvent) throws IOException {
+        Progress progress = StickHero.getInstance().getProgress();
+        progress.setPastScore(hero.getScore());
+        progress.setHighScore(Math.max(hero.getScore(), progress.getHighScore()));
+        progress.setCherries(hero.getCherries());
+        StickHero.serialize();
         System.exit(0);
     }
 }
