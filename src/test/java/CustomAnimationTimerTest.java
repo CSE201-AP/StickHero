@@ -27,6 +27,7 @@ public class CustomAnimationTimerTest {
 
     @Test
     public void testHandleCalledAtInterval() {
+        System.out.println("Testt");
         countingCustomAnimationTimer.handle(0);
         countingCustomAnimationTimer.handle(LENGTHNS);
         assertEquals("User handle() should be called at end of interval length", 2, countingCustomAnimationTimer.getUserHandleCount());

@@ -16,7 +16,7 @@
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="78.0" layoutY="23.0" prefHeight="223.0" prefWidth="178.0" style="-fx-font-style: #1c4f05; -fx-font-family: Roboto; -fx-font-size: 60; -fx-font-weight: Bold;" text="STICKHERO" textFill="WHITE" textAlignment="CENTER" wrapText="true" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="78.0" layoutY="23.0" prefHeight="223.0" prefWidth="178.0" style="-fx-font-family: Roboto; -fx-font-size: 60; -fx-font-weight: Bold;" text="STICKHERO" textFill="BLACK" textAlignment="CENTER" wrapText="true" />
             <Button layoutX="102.0" layoutY="234.0" mnemonicParsing="false" onAction="#onPlayButtonClicked" prefHeight="130.0" prefWidth="130.0" style="-fx-font-family: Roboto; -fx-font-size: 28; -fx-background-radius: 100; -fx-background-color: #dde3ea;" text="PLAY" />
             <Button fx:id="unmuteButton" layoutX="143.0" layoutY="511.0" minWidth="38.0" mnemonicParsing="false" onAction="#onSoundButtonClicked" prefHeight="38.0" prefWidth="31.0" style="-fx-background: transparent; -fx-background-color: transparent;">
                <graphic>

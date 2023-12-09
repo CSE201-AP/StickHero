@@ -10,6 +10,6 @@ public class TestSuite {
     @Test
     @Rule
     public void test() {
-        System.out.println("Running Test Suite");
+        System.out.println("Running Test Suite...");
     }
 }
