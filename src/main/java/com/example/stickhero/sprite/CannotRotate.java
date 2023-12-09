@@ -61,4 +61,9 @@ public class CannotRotate implements RotationAnimator {
     public Animation.Status getStatus() {
         return null;
     }
+
+    @Override
+    public void resume() {
+
+    }
 }

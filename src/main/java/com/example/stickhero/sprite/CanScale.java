@@ -104,4 +104,11 @@ public class CanScale implements ScaleAnimator {
         }
         return null;
     }
+
+    @Override
+    public void resume() {
+        if (transition != null) {
+            transition.pause();
+        }
+    }
 }

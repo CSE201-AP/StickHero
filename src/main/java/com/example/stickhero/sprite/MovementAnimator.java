@@ -23,5 +23,7 @@ public interface MovementAnimator {
     List<Callback> getBeforeCallbacks();
 
     Animation.Status getStatus();
+
+    void resume();
 }
 

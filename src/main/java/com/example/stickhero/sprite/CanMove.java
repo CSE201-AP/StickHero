@@ -92,4 +92,11 @@ public class CanMove implements MovementAnimator {
         }
         return null;
     }
+
+    @Override
+    public void resume() {
+        if (transition != null) {
+            transition.pause();
+        }
+    }
 }

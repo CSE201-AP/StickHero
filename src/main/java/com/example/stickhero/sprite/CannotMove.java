@@ -50,4 +50,9 @@ public class CannotMove implements MovementAnimator {
     public Animation.Status getStatus() {
         return null;
     }
+
+    @Override
+    public void resume() {
+
+    }
 }

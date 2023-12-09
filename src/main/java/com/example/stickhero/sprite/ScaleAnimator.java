@@ -26,5 +26,7 @@ public interface ScaleAnimator {
     List<Callback> getBeforeCallbacks();
 
     Animation.Status getStatus();
+
+    void resume();
 }
 

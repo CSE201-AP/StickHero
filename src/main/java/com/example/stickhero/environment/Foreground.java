@@ -25,4 +25,8 @@ public class Foreground extends AnchorPane implements Pannable {
     public void panHorizontalRelative(double offset) {
         panHorizontal(offset);  // No depth in foreground
     }
+
+    public MovementAnimator getMovementAnimator(){
+        return movementAnimator;
+    }
 }

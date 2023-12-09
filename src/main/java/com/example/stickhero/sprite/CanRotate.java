@@ -100,4 +100,11 @@ public class CanRotate implements RotationAnimator {
         }
         return null;
     }
+
+    @Override
+    public void resume() {
+        if (transition != null) {
+            transition.pause();
+        }
+    }
 }

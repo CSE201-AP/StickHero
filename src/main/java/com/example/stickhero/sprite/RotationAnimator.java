@@ -26,5 +26,7 @@ public interface RotationAnimator {
     List<Callback> getBeforeCallbacks();
 
     Animation.Status getStatus();
+
+    void resume();
 }
 

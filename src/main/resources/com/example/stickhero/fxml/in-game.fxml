@@ -123,5 +123,10 @@
             </ImageView>
             <Label fx:id="cherriesLabel" layoutX="264.0" layoutY="16.0" minWidth="150" text="0"/>
         </AnchorPane>
+        <AnchorPane fx:id="pauseMenu">
+            <Button layoutX="70.0" layoutY="257.0" mnemonicParsing="false" onAction="#onResumeButtonClick" prefHeight="54.0" prefWidth="194.0" style="-fx-font-family: Roboto; -fx-font-size: 24; -fx-background-color: #E54257; -fx-background-radius: 10;" text="RESUME" />
+            <Button layoutX="70.0" layoutY="328.0" mnemonicParsing="false" onAction="#onSaveAndExitButtonClick" prefHeight="54.0" prefWidth="194.0" style="-fx-font-family: Roboto; -fx-font-size: 22; -fx-background-color: #E54257; -fx-background-radius: 10;" text="SAVE AND EXIT" />
+            <Label layoutX="77.0" layoutY="87.0" style="-fx-font-weight: Bold; -fx-font-size: 48; -fx-font-family: Roboto;" text="PAUSED" />
+        </AnchorPane>
     </AnchorPane>
 </AnchorPane>

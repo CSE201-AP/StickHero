@@ -59,4 +59,9 @@ public class CannotScale implements ScaleAnimator {
     public Animation.Status getStatus() {
         return null;
     }
+
+    @Override
+    public void resume() {
+
+    }
 }
