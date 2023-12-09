@@ -23,13 +23,11 @@ public class Cleanup extends ScheduledService<Void> {
                     }
                     System.out.println("Before:" + foreground.getChildren().size());
                     foreground.getChildren().removeIf((node) -> {
-                        System.out.println("node.getBoundsInLocal().getMaxX() = " + node.getBoundsInLocal().getMaxX());
-                        System.out.println("foreground.sceneToLocal(0, 0).getX() = " + foreground.sceneToLocal(0, 0).getX());
-                        if (node.getBoundsInLocal().getMaxX() <= foreground.sceneToLocal(0, 0).getX()) {
+                        boolean hidden = node.getBoundsInParent().getMaxX() + node.getTranslateX() <= foreground.sceneToLocal(0, 0).getX();
+                        if (hidden) {
                             System.out.println(node + " is hidden");
                         }
-                        // try kar run karne ki
-                        return node.getBoundsInLocal().getMaxX() <= foreground.sceneToLocal(0, 0).getX();
+                        return hidden;
                     });
                     System.out.println("After:" + foreground.getChildren().size());
                 });
