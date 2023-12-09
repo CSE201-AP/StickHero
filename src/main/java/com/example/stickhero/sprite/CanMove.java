@@ -17,8 +17,8 @@ import java.util.List;
 public class CanMove implements MovementAnimator {
     private double speedMs;
     private final Node node;
-    private List<Callback> beforeCallbacks = new ArrayList<>();
-    private List<EventHandler<ActionEvent>> afterHandlers = new ArrayList<>();
+    private final List<Callback> beforeCallbacks = new ArrayList<>();
+    private final List<EventHandler<ActionEvent>> afterHandlers = new ArrayList<>();
     private Interpolator interpolator = Interpolator.LINEAR;
     TranslateTransition transition;
 
@@ -80,8 +80,8 @@ public class CanMove implements MovementAnimator {
 
     @Override
     public void interrupt() {
-        if (transition != null && transition.getStatus() == ScaleTransition.Status.RUNNING) {
-            transition.stop();
+        if (transition != null) {
+            transition.pause();
         }
     }
 

@@ -13,13 +13,13 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             onMouseClicked="#onMouseClicked" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased"
             prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stickhero.InGameController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stickhero.InGameController"
+>
     <!--    <fx:define>-->
     <!--        <Double fx:id="HEIGHT"/>-->
     <!--    </fx:define>-->
     <Background fx:id="background"/>
-    <Foreground fx:id="foreground" prefWidth="335.0" AnchorPane.bottomAnchor="0">
-    </Foreground>
+    <Foreground fx:id="foreground" prefWidth="335.0" AnchorPane.bottomAnchor="0"/>
     <AnchorPane prefHeight="164.0" prefWidth="335.0">
         <Button layoutX="6.0" layoutY="12.0" maxHeight="-Infinity" maxWidth="24.0" minHeight="-Infinity" minWidth="24.0"
                 mnemonicParsing="false" onAction="#onPauseButtonClicked" prefHeight="24.0" prefWidth="24.0"

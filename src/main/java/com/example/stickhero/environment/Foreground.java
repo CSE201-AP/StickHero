@@ -2,15 +2,9 @@ package com.example.stickhero.environment;
 
 import com.example.stickhero.sprite.CanMove;
 import com.example.stickhero.sprite.MovementAnimator;
-import com.example.stickhero.sprite.Sprite;
 import javafx.beans.DefaultProperty;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
 
 @DefaultProperty("children")
 public class Foreground extends AnchorPane implements Pannable {

@@ -18,8 +18,12 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
+import java.io.ObjectOutputStream;
 import java.util.*;
 
 public class InGameController {
@@ -44,10 +48,12 @@ public class InGameController {
 
     public void initialize() {
         app = StickHero.getInstance();
-        background = createBackground();
+        createBackground();
         hero = createHero();
         app.setHero(hero);
         createBuildings(2);
+        scoreLabel.setText(Integer.toString(hero.getScore()));
+        cherriesLabel.setText(Integer.toString(hero.getCherries()));
         hero.scoreProperty().addListener((observable, oldValue, newValue) -> {
             scoreLabel.setText(newValue.toString());
         });
@@ -56,7 +62,6 @@ public class InGameController {
         });
         foreground.getChildren().add(hero);
     }
-
     private double getLocalInForeground(double x) {
         return foreground.sceneToLocal(new Point2D(x, 0)).getX();
     }
@@ -95,8 +100,7 @@ public class InGameController {
         }
     }
 
-    private Background createBackground() {
-        Background background = new Background();
+    private void createBackground() {
         for (int i=0; i<2; i++) {
             BackgroundImage backgroundImage = new BackgroundImage(
                     new Image(Objects.requireNonNull(getClass().getResourceAsStream("background" + (i+1) + ".png"))),
@@ -105,10 +109,11 @@ public class InGameController {
             backgroundImage.minHeightProperty().bind(background.heightProperty());
             background.getChildren().add(backgroundImage);
         }
+        AnchorPane.setBottomAnchor(background, 0D);
+        AnchorPane.setTopAnchor(background, 0D);
         AudioClip backgroundSound = Sound.getSound("bg_country");
         backgroundSound.setCycleCount(AudioClip.INDEFINITE);
         backgroundSound.play();
-        return background;
     }
 
     private Hero createHero() {
@@ -155,12 +160,24 @@ public class InGameController {
         cherry.setLayoutX(position);
         cherry.setLayoutY(cherry.getFitHeight()+5);
         hero.collisionCallbacks.put(cherry, () -> {
-            System.out.println("Collided with cherry");
             Sound.getSound("eating_fruit").play();
             hero.collisionCallbacks.remove(cherry);
             cherry.animate("pop");
             foreground.getChildren().remove(cherry);
-            hero.addCherry();
+            hero.getMovementAnimator().getAfterHandlers().add(new EventHandler<>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    hero.getMovementAnimator().getAfterHandlers().remove(this);
+                    foreground.getChildren().remove(cherry);
+                }
+            });
+            hero.getMovementAnimator().getAfterHandlers().add(new EventHandler<>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    if (!hero.isDying()) hero.addCherry();
+                    hero.getMovementAnimator().getAfterHandlers().remove(this);
+                }
+            });
         });
     }
 
@@ -179,15 +196,17 @@ public class InGameController {
                 if (random.nextDouble(-1, 1) > 0) {
                     createCherry();
                 }
+                // Destroy last perfect block
+                lastBuilding.getChildren().remove(lastBuilding.getPerfectBlock());
                 hero.increaseScore(1);
             }
+            hero.setStick(null);
         }
     };
 
     private void animateDeath() {
-        if (hero.getScaleY() > 0) hero.flip();
         hero.getMovementAnimator().interrupt();
-//        hero.getMovementAnimator().getAfterHandlers().remove(onMovementFinishedEvent);
+        hero.getMovementAnimator().getAfterHandlers().remove(onMovementFinishedEvent);
         hero.getMovementAnimator().setSpeedMs(Hero.FALL_SPEED);
         hero.getMovementAnimator().moveBy(new Point2D(0, Building.HEIGHT+hero.getFitHeight()));
         Sound.getSound("dead").play();
@@ -196,12 +215,10 @@ public class InGameController {
 
     private boolean scenePointAboveBuilding(double x, Building building) {
         Bounds buildingInScene = foreground.localToScene(building.getBoundsInParent());
-        System.out.println(buildingInScene);
-        System.out.println(x + " " + buildingInScene.getCenterY());
         return buildingInScene.contains(x, buildingInScene.getCenterY());
     }
 
-    private final EventHandler<ActionEvent> onStickToppleEvent = new EventHandler<ActionEvent>() {
+    private final EventHandler<ActionEvent> onStickToppleEvent = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
             double stickTipX = foreground.localToScene(hero.getStick().getBoundsInParent()).getMaxX();
@@ -213,14 +230,14 @@ public class InGameController {
                 background.panHorizontal(-difference);
                 Bounds perfectBlockInScene = lastBuilding.localToScene(lastBuilding.getPerfectBlock().getBoundsInParent());
                 if (perfectBlockInScene.contains(stickTipX, perfectBlockInScene.getCenterY())) {
-                    hero.addCherry();
+                    hero.increaseScore(1);
                     lastBuilding.getChildren().remove(lastBuilding.getPerfectBlock());
                 }
 //                if (random.nextDouble() > 0) {
 //                    createCherry();
 //                }
             } else {
-                hero.getMovementAnimator().moveBy(new Point2D(hero.getStick().getScaleY(), 0));
+                hero.getMovementAnimator().moveBy(new Point2D(hero.getStick().getScaleY() + hero.getFitWidth()/2, 0));
                 hero.setDying(true);
             }
         }
@@ -241,15 +258,10 @@ public class InGameController {
                             && !(scenePointAboveBuilding(heroPosition, buildings.get(buildings.size()-1))
                                  && !hero.isDying()
                             );
-            System.out.println("heroPosition = " + heroPosition);
-            System.out.println("hero.getFitWidth() = " + hero.getFitWidth());
-            System.out.println("scenePointAboveBuilding(heroPosition-hero.getFitWidth(), buildings.get(buildings.size()-2)) = " + scenePointAboveBuilding(heroPosition - hero.getFitWidth(), buildings.get(buildings.size() - 2)));
-            System.out.println("scenePointAboveBuilding(heroPosition, buildings.get(buildings.size()-1)) = " + scenePointAboveBuilding(heroPosition, buildings.get(buildings.size() - 1)));
-            System.out.println("hero.isDying() = " + hero.isDying());
-            System.out.println("canFlip = " + canFlip);
             if (canFlip) hero.flip();
         } else {
             if (hero.isDying()) return;
+            if (hero.getStick() != null) return;
             Stick stick = new Stick();
             hero.setStick(stick);
             foreground.getChildren().add(stick);
@@ -264,7 +276,8 @@ public class InGameController {
         if (hero == null) return;
         if (hero.getStick() == null) return;
         if (hero.isDying()) return;
-        if (hero.getMovementAnimator().getStatus() != Animation.Status.RUNNING) {
+        if (hero.getMovementAnimator().getStatus() != Animation.Status.RUNNING && hero.getStick().getRotationAnimator().getStatus() != Animation.Status.RUNNING) {
+            System.out.println("Stopping extension");
             hero.getStick().stopExtendStick();
         }
     }

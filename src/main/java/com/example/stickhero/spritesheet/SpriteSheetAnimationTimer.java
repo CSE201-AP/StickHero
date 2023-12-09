@@ -22,13 +22,11 @@ public class SpriteSheetAnimationTimer extends CustomAnimationTimer {
         current = crops.size()-1;
         handle();
         super.start();
-        System.out.println("Called super.start()");
     }
 
     @Override
     public void stop() {
         super.stop();
-        System.out.println("Called super.stop()");
         current = crops.size()-1;
         handle();
     }

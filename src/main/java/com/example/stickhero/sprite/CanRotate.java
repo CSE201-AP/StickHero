@@ -17,8 +17,8 @@ import java.util.List;
 public class CanRotate implements RotationAnimator {
     private double speedMs;
     private final Node node;
-    private List<Callback> beforeCallbacks = new ArrayList<>();
-    private List<EventHandler<ActionEvent>> afterHandlers = new ArrayList<>();
+    private final List<Callback> beforeCallbacks = new ArrayList<>();
+    private final List<EventHandler<ActionEvent>> afterHandlers = new ArrayList<>();
     private Interpolator interpolator = Interpolator.LINEAR;
     private RotateTransition transition;
 

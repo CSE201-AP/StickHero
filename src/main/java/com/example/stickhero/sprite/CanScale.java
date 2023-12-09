@@ -17,8 +17,8 @@ public class CanScale implements ScaleAnimator {
     private double speedMs;
     private final Node node;
     private ScaleTransition transition;
-    private List<Callback> beforeCallbacks = new ArrayList<>();
-    private List<EventHandler<ActionEvent>> afterHandlers = new ArrayList<>();
+    private final List<Callback> beforeCallbacks = new ArrayList<>();
+    private final List<EventHandler<ActionEvent>> afterHandlers = new ArrayList<>();
     private Interpolator interpolator = Interpolator.LINEAR;
 
     public CanScale(Node node, double speedMs) {

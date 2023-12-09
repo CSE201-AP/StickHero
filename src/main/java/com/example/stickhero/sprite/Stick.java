@@ -43,6 +43,7 @@ public class Stick extends Rectangle implements Sprite {
     }
 
     public void topple(){
+        System.out.println("Toppling");
         rotationAnimator.rotateBy(90, 0, -getHeight()/2);
         Sound.getSound("fall").play();
     }

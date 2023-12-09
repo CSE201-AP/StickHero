@@ -9,11 +9,12 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.transform.Translate;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Hero extends ImageSprite {
-    public static final double SPEED = 0.1;
+    public static final double SPEED = 0.2;
     public static final double FALL_SPEED = 0.5;
     public static final double WIDTH = 50;
     public Map<Node, Callback> collisionCallbacks = new HashMap<>();
