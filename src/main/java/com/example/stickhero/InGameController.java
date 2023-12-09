@@ -68,26 +68,19 @@ public class InGameController {
     private final EventHandler<ActionEvent> onStickToppleEvent = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            System.out.println("Stick toppled");
             double stickTipX = foreground.localToScene(hero.getStick().getBoundsInParent()).getMaxX();
             Building lastBuilding = buildings.get(buildings.size() - 1);
             boolean landed = scenePointAboveBuilding(stickTipX, lastBuilding);
             if (landed) {
-                System.out.println("Landed");
                 double difference = lastBuilding.localToScene(lastBuilding.getBoundsInLocal()).getMaxX() - STARTX;
                 hero.getMovementAnimator().moveBy(new Point2D(difference, 0));
                 background.panHorizontal(-difference);
-                System.out.println("Panned");
                 Bounds perfectBlockInScene = lastBuilding.localToScene(lastBuilding.getPerfectBlock().getBoundsInParent());
                 if (perfectBlockInScene.contains(stickTipX, perfectBlockInScene.getCenterY())) {
                     hero.increaseScore(1);
                     lastBuilding.getChildren().remove(lastBuilding.getPerfectBlock());
                 }
-//                if (random.nextDouble() > 0) {
-//                    createCherry();
-//                }
             } else {
-                System.out.println("Didn't land");
                 hero.getMovementAnimator().moveBy(new Point2D(hero.getStick().getScaleY() + hero.getFitWidth() / 2, 0));
                 hero.setDying(true);
             }
@@ -119,7 +112,8 @@ public class InGameController {
         return foreground.sceneToLocal(new Point2D(x, 0)).getX();
     }
 
-    private void createBuildings(int n) {
+    private List<Double> createBuildings(int n) {
+        List<Double> positions = new ArrayList<>();
         boolean initial = buildings.isEmpty();
         for (int i = 0; i < n; i++) {
             Building building;
@@ -127,9 +121,11 @@ public class InGameController {
                 building = new Building(STARTX);
                 building.getChildren().remove(building.getPerfectBlock());
                 building.setLayoutX(getLocalInForeground(0));
+                positions.add(0D);
             } else {
                 building = new Building();
                 building.setLayoutX(getLocalInForeground(foreground.getPrefWidth()));
+                positions.add(0D);
             }
             foreground.getChildren().add(building);
             if (!buildings.isEmpty()) {
@@ -137,9 +133,17 @@ public class InGameController {
                 double maximumDistance = foreground.getPrefWidth() - building.getRectangle().getWidth() - STARTX;
                 double distance = random.nextDouble(Building.MINIMUM_DISTANCE, maximumDistance);
                 double position = previousBuilding.getBoundsInParent().getMaxX() + distance;
+                positions.set(positions.size()-1, foreground.localToScene(position, 0).getX()-foreground.getPrefWidth());
+                System.out.println("Expected final translation = " + positions.get(positions.size()-1));
                 if (initial) {
                     building.setLayoutX(position);
                 } else {
+                    building.getMovementAnimator().getBeforeCallbacks().add(() -> {
+                        System.out.println("Started animation");
+                    });
+                    building.getMovementAnimator().getAfterHandlers().add((e) -> {
+                        System.out.println("Stopped animation");
+                    });
                     building.getMovementAnimator().moveBy(new Point2D(foreground.localToScene(position, 0).getX() - foreground.getPrefWidth(), 0));
                 }
             }
@@ -151,6 +155,7 @@ public class InGameController {
                 hero.setDying(true);
             });
         }
+        return positions;
     }
 
     private void createBackground() {
@@ -195,16 +200,15 @@ public class InGameController {
     }    private final EventHandler<ActionEvent> onMovementFinishedEvent = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            System.out.println("Movement finished");
             Building lastBuilding = buildings.get(buildings.size() - 1);
             hero.getStick().getRotationAnimator().getAfterHandlers().remove(onStickToppleEvent);
             if (hero.isDying()) {
                 animateDeath();
             } else {
                 Sound.getSound("score").play();
-                createBuildings(1);
-                if (true || random.nextDouble(-1, 1) > 0) {
-                    createCherry();
+                List<Double> offsets = createBuildings(1);
+                if (random.nextDouble(-1, 1) > 0) {
+                    createCherry(offsets.get(0));
                 }
                 double difference = lastBuilding.localToScene(lastBuilding.getBoundsInLocal()).getMaxX() - STARTX;
                 foreground.panHorizontal(-difference);
@@ -216,7 +220,7 @@ public class InGameController {
         }
     };
 
-    private void createCherry() {
+    private void createCherry(double nextBuildingOffset) {
         ImageSprite cherry = new ImageSprite(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Cherry.png"))),
                 Map.of(
                         "default", new SpriteSheetGroup(List.of(new Rectangle2D(0, 0, 79, 51)), 1, 0),
@@ -226,25 +230,15 @@ public class InGameController {
         );
         cherry.setPreserveRatio(true);
         cherry.setFitWidth(Hero.WIDTH / 2);
-        buildings.get(buildings.size() - 2).getRectangle().setFill(Color.RED);
-        buildings.get(buildings.size() - 1).getRectangle().setFill(Color.GREEN);
-        double position = random.nextDouble(
-                buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX(),
-                buildings.get(buildings.size() - 1).getBoundsInParent().getMinX() - cherry.getFitWidth()
-        );
-//        System.out.println("buildings.get(buildings.size() - 1).getBoundsInParent().getMinX() = " + buildings.get(buildings.size() - 1).getBoundsInParent().getMinX());
-//        System.out.println("(cherry.getFitWidth() + buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX()) = " + (cherry.getFitWidth() + buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX()));
+        double minPosition = buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX();
+        double maxPosition = buildings.get(buildings.size() - 1).getBoundsInParent().getMinX() - cherry.getFitWidth() + nextBuildingOffset;
+        double position = random.nextDouble(minPosition, maxPosition);
 
-        Rectangle rectangle = new Rectangle(
-                buildings.get(buildings.size() - 1).getBoundsInParent().getMinX() - cherry.getFitWidth() - buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX(),
-                10
-        );
-        rectangle.setLayoutX(buildings.get(buildings.size() - 2).getBoundsInParent().getMaxX());
-        foreground.getChildren().add(rectangle);
         foreground.getChildren().add(cherry);
         cherry.animate("idle");
         cherry.setLayoutX(position);
         cherry.setLayoutY(cherry.getFitHeight() + 5);
+
         hero.collisionCallbacks.put(cherry, () -> {
             Sound.getSound("eating_fruit").play();
             hero.collisionCallbacks.remove(cherry);
