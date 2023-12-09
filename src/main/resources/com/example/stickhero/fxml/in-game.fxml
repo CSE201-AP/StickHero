@@ -1,59 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import com.example.stickhero.environment.Background?>
+<?import com.example.stickhero.environment.Foreground?>
+<?import com.example.stickhero.sprite.Building?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.stickhero.InGameController">
-   <children>
-      <AnchorPane fx:id="foreground" BorderPane.alignment="CENTER" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" onMouseClicked="#onMouseClicked">
-         <children>
-            <Rectangle fx:id="nextBuilding" arcWidth="5.0" height="207.0" layoutX="228.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="74.0" />
-            <Label fx:id="score" layoutX="124.0" layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0" prefWidth="86.0" style="-fx-background-color: rgba(0, 0, 0, 0.15); -fx-background-radius: 5; -fx-text-fill: white;" text="5" textAlignment="CENTER" textFill="WHITE">
-               <padding>
-                  <Insets left="35.0" right="35.0" />
-               </padding>
-               <font>
-                  <Font name="Roboto Bold" size="26.0" />
-               </font>
-            </Label>
-            <Rectangle fx:id="nextPerfectBLock" fill="RED" height="5.0" layoutX="262.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="7.0" />
-            <Rectangle fx:id="currBuilding" arcWidth="5.0" height="207.0" layoutY="405.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="74.0" />
-            <Rectangle fx:id="stick" arcWidth="5.0" height="1.0" layoutX="70.0" layoutY="404.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="4.0" />
-            <Label layoutX="86.0" layoutY="117.0" prefHeight="46.0" prefWidth="162.0" text="Hold your finger on screen to stretch out the stick" textAlignment="CENTER" textFill="#737373" wrapText="true">
-               <font>
-                  <Font name="Roboto" size="12.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="18.0" fitWidth="28.0" layoutX="293.0" layoutY="29.0" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Cherry.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="264.0" layoutY="29.0" text="214" />
-            <ImageView fx:id="hero" fitHeight="32.0" fitWidth="33.0" layoutX="37.0" layoutY="372.0" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Hero.png" />
-               </image>
-            </ImageView>
-            <Button layoutX="5.0" layoutY="25.0" onAction="#onPauseButtonClicked" maxHeight="-Infinity" maxWidth="24.0" minHeight="-Infinity" minWidth="24.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" style="-fx-background-color: rgba(0, 0, 0, 0);">
-               <graphic>
-                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/Pause.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-         </children>
-      </AnchorPane>
-   </children>
+<?import java.lang.Double?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            onMouseClicked="#onMouseClicked" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased"
+            prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stickhero.InGameController">
+    <!--    <fx:define>-->
+    <!--        <Double fx:id="HEIGHT"/>-->
+    <!--    </fx:define>-->
+    <Background fx:id="background"/>
+    <Foreground fx:id="foreground" prefWidth="335.0" AnchorPane.bottomAnchor="0">
+    </Foreground>
+    <AnchorPane prefHeight="164.0" prefWidth="335.0">
+        <Button layoutX="6.0" layoutY="12.0" maxHeight="-Infinity" maxWidth="24.0" minHeight="-Infinity" minWidth="24.0"
+                mnemonicParsing="false" onAction="#onPauseButtonClicked" prefHeight="24.0" prefWidth="24.0"
+                style="-fx-background-color: rgba(0, 0, 0, 0);">
+            <graphic>
+                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../images/Pause.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Label fx:id="scoreLabel" alignment="CENTER" graphicTextGap="0.0" layoutX="124.0" layoutY="60.0"
+               maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="39.0"
+               prefWidth="86.0"
+               style="-fx-background-color: rgba(0, 0, 0, 0.15); -fx-background-radius: 5; -fx-text-fill: white;"
+               text="0" textAlignment="CENTER" textFill="WHITE">
+            <font>
+                <Font name="Roboto Bold" size="26.0"/>
+            </font>
+        </Label>
+        <Label fx:id="hint" layoutX="86.0" layoutY="117.0" prefHeight="46.0" prefWidth="162.0"
+               text="Hold your finger on screen to stretch out the stick" textAlignment="CENTER" textFill="#737373"
+               wrapText="true">
+            <font>
+                <Font name="Roboto" size="12.0"/>
+            </font>
+        </Label>
+        <ImageView fitHeight="18.0" fitWidth="28.0" layoutX="293.0" layoutY="16.0" preserveRatio="true">
+            <Image url="@../images/Cherry.png"/>
+        </ImageView>
+        <Label fx:id="cherriesLabel" layoutX="264.0" layoutY="16.0" minWidth="150" text="0"/>
+    </AnchorPane>
 </AnchorPane>

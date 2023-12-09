@@ -1,6 +1,7 @@
 package com.example.stickhero.sprite;
 
 import com.example.stickhero.Callback;
+import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
 import javafx.event.ActionEvent;
@@ -9,27 +10,34 @@ import javafx.scene.Node;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CanScale implements ScaleAnimator {
-    private final double speedMs;
-    private ScaleTransition transition;
+    private double speedMs;
     private final Node node;
-    private Callback before;
-    private EventHandler<ActionEvent> after;
+    private ScaleTransition transition;
+    private List<Callback> beforeCallbacks = new ArrayList<>();
+    private List<EventHandler<ActionEvent>> afterHandlers = new ArrayList<>();
     private Interpolator interpolator = Interpolator.LINEAR;
 
     public CanScale(Node node, double speedMs) {
         this.node = node;
         this.speedMs = speedMs;
-        this.before = () -> {/* Do nothing */};
-        this.after = (ActionEvent e) -> {/* Do nothing */};
     }
 
-    public void setBeforeCallback(Callback before) {
-        this.before = before;
+    public void setSpeedMs(double speedMs) {
+        this.speedMs = speedMs;
     }
 
-    public void setAfterHandler(EventHandler<ActionEvent> after) {
-        this.after = after;
+    @Override
+    public List<EventHandler<ActionEvent>> getAfterHandlers() {
+        return afterHandlers;
+    }
+
+    @Override
+    public List<Callback> getBeforeCallbacks() {
+        return beforeCallbacks;
     }
 
     public void setInterpolator(Interpolator interpolator) {
@@ -37,7 +45,7 @@ public class CanScale implements ScaleAnimator {
     }
 
     private void setPivot(double pivotX, double pivotY) {
-        node.getTransforms().add(new Translate(pivotX+node.getTranslateX(), pivotY+node.getTranslateY()));
+        node.getTransforms().add(new Translate(pivotX + node.getTranslateX(), pivotY + node.getTranslateY()));
         node.setTranslateX(-pivotX);
         node.setTranslateY(-pivotY);
     }
@@ -56,17 +64,24 @@ public class CanScale implements ScaleAnimator {
 
     @Override
     public void scaleTo(double w, double h, double pivotX, double pivotY) {
-        before.function();
+        for (Callback before : beforeCallbacks) {
+            before.function();
+        }
         setPivot(pivotX, pivotY);
         double currentW = node.getBoundsInLocal().getWidth(), currentH = node.getBoundsInLocal().getHeight();
-        transition = new ScaleTransition(
-                new Duration(Math.max(Math.abs(w-currentW), Math.abs(h-currentH))/speedMs),
-                node
-        );
-        transition.setToX(w/currentW);
-        transition.setToY(h/currentH);
+        transition = new ScaleTransition(new Duration(Math.max(Math.abs(w - currentW), Math.abs(h - currentH)) / speedMs), node);
+        double scaleW = w / currentW;
+        double scaleH = h / currentH;
+        if (Math.abs(node.getScaleX() - scaleW) > 1e-6) {
+            transition.setToX(scaleW);
+        }
+        if (Math.abs(node.getScaleY() - scaleH) > 1e-6) {
+            transition.setToY(scaleH);
+        }
         transition.setInterpolator(interpolator);
-        transition.setOnFinished(after);
+        transition.setOnFinished((e) -> {
+            List.copyOf(afterHandlers).forEach((handler) -> handler.handle(e));
+        });
         transition.play();
     }
 
@@ -80,5 +95,13 @@ public class CanScale implements ScaleAnimator {
         if (transition != null && transition.getStatus() == ScaleTransition.Status.RUNNING) {
             transition.stop();
         }
+    }
+
+    @Override
+    public Animation.Status getStatus() {
+        if (transition != null) {
+            return transition.getStatus();
+        }
+        return null;
     }
 }

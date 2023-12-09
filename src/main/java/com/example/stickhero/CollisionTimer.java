@@ -5,6 +5,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import com.example.stickhero.Callback;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,10 +25,14 @@ public class CollisionTimer extends AnimationTimer {
         this.callbacks = callbacks;
     }
 
+    public Map<Node, Callback> getCallbacks() {
+        return callbacks;
+    }
+
     @Override
     public void handle(long l) {
         colliding = false;
-        callbacks.forEach((Node obstacle, Callback callback) -> {
+        (new HashMap<>(callbacks)).forEach((Node obstacle, Callback callback) -> {
             if (obstacle == node) return;
             Bounds otherNodeInScene = obstacle.localToScene(obstacle.getBoundsInLocal());
             if (node.intersects(node.sceneToLocal(otherNodeInScene))) {

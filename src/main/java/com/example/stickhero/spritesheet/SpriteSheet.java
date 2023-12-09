@@ -1,33 +1,33 @@
 package com.example.stickhero.spritesheet;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
+
+import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.image.ImageView;
 
-import java.util.List;
-
 public class SpriteSheet extends ImageView {
-    private final SpriteSheetAnimationTimer movementAnimationTimer;
-    private final SpriteSheetAnimationTimer rotationAnimationTimer;
+    private final Map<String, SpriteSheetAnimationTimer> animationTimers = new HashMap<>();
 
-    public SpriteSheet(Image image, List<Rectangle2D> movementSprites, List<Rectangle2D> rotationSprites, long movementDuration, long rotationDuration) {
+    public SpriteSheet(Image image, Map<String, SpriteSheetGroup> groups) {
         this.setImage(image);
-        this.setViewport(movementSprites.get(0));
-        movementAnimationTimer = new SpriteSheetAnimationTimer(this, movementSprites, movementDuration);
-        rotationAnimationTimer = new SpriteSheetAnimationTimer(this, rotationSprites, rotationDuration);
+        this.setViewport(groups.get("default").sprites.get(0));
+        groups.forEach((name, group) -> {
+            animationTimers.put(
+                name,
+                new SpriteSheetAnimationTimer(this, group.sprites, group.duration)
+            );
+        });
     }
 
-    public void animateMovement() {
+    public void animate(String name) {
+        if (animationTimers.get(name) == null) return;
         stopAnimations();
-        movementAnimationTimer.start();
-    }
-
-    public void animateRotation() {
-        stopAnimations();
-        rotationAnimationTimer.start();
+        animationTimers.get(name).start();
     }
 
     public void stopAnimations() {
-        movementAnimationTimer.stop();
-        rotationAnimationTimer.stop();
+        for (SpriteSheetAnimationTimer animationTimer: animationTimers.values()) {
+            animationTimer.stop();
+        }
     }
 }

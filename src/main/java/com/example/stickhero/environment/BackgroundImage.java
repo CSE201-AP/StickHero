@@ -3,6 +3,7 @@ package com.example.stickhero.environment;
 import com.example.stickhero.sprite.CanMove;
 import com.example.stickhero.sprite.MovementAnimator;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
@@ -26,23 +27,25 @@ public class BackgroundImage extends HBox implements Pannable {
         tile2.fitHeightProperty().bind(this.heightProperty());
         tile2.setPreserveRatio(true);
 
+
         getChildren().addAll(tile1, tile2);
     }
 
     @Override
     public void panHorizontal(double offset) {
-        System.out.println("offset = " + offset);
         double imageWidth = getBoundsInLocal().getWidth() / 2;
         if (getTranslateX() + offset < -imageWidth) {
             double switchX = -imageWidth;
             double partialPanOffset = switchX - getTranslateX();
-            movementAnimator.setAfterHandler((ActionEvent e) -> {
-                // When the second tile reaches the first tile's position, move both
-                // tiles to their original positions.
-                setTranslateX(0);
-                movementAnimator.setAfterHandler(null);
-                panHorizontal(offset - partialPanOffset);
-            });
+            EventHandler<ActionEvent> handler = new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    setTranslateX(0);
+                    movementAnimator.getAfterHandlers().remove(this);
+                    panHorizontal(offset - partialPanOffset);
+                }
+            };
+            movementAnimator.getAfterHandlers().add(handler);
             panHorizontal(partialPanOffset);
         } else {
             movementAnimator.moveBy(new Point2D(offset, 0));

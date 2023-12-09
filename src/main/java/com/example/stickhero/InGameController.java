@@ -1,169 +1,266 @@
 package com.example.stickhero;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.PathTransition;
-import javafx.animation.Timeline;
+import com.example.stickhero.environment.Background;
+import com.example.stickhero.environment.BackgroundImage;
+import com.example.stickhero.environment.Foreground;
+import com.example.stickhero.sprite.Building;
+import com.example.stickhero.sprite.Hero;
+import com.example.stickhero.sprite.ImageSprite;
+import com.example.stickhero.sprite.Stick;
+import com.example.stickhero.spritesheet.SpriteSheetGroup;
+import javafx.animation.Animation;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
-import javafx.scene.transform.Rotate;
-import javafx.animation.Transition.*;
-import javafx.util.converter.IntegerStringConverter;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class InGameController {
+    private static final double STARTX = 60;
     @FXML
-    private ImageView hero;
+    private Label scoreLabel;
     @FXML
-    private Rectangle stick, currBuilding, nextBuilding, currPerfectBlock, nextPerfectBLock;
+    private Label cherriesLabel;
     @FXML
-    private Label score;
+    private Background background;
+    @FXML
+    private Foreground foreground;
+    @FXML
+    private Label hint;
+    private StickHero app;
+    private Hero hero;
+    private List<Building> buildings = new ArrayList<>();
+    private static final Random random = new Random();
+//    @FXML
+//    private static final Double HEIGHT = Building.HEIGHT;
+
+
+    public void initialize() {
+        app = StickHero.getInstance();
+        background = createBackground();
+        hero = createHero();
+        app.setHero(hero);
+        createBuildings(2);
+        hero.scoreProperty().addListener((observable, oldValue, newValue) -> {
+            scoreLabel.setText(newValue.toString());
+        });
+        hero.cherriesProperty().addListener((observable, oldValue, newValue) -> {
+            cherriesLabel.setText(newValue.toString());
+        });
+        foreground.getChildren().add(hero);
+    }
+
+    private double getLocalInForeground(double x) {
+        return foreground.sceneToLocal(new Point2D(x, 0)).getX();
+    }
+
+    private void createBuildings(int n) {
+        boolean initial = buildings.isEmpty();
+        for (int i=0; i<n; i++) {
+            Building building;
+            if (buildings.isEmpty()) {
+                building = new Building(STARTX);
+                building.getChildren().remove(building.getPerfectBlock());
+                building.setLayoutX(getLocalInForeground(0));
+            } else {
+                building = new Building();
+                building.setLayoutX(getLocalInForeground(foreground.getPrefWidth()));
+            }
+            foreground.getChildren().add(building);
+            if (!buildings.isEmpty()) {
+                Building previousBuilding = buildings.get(buildings.size()-1);
+                double maximumDistance = foreground.getPrefWidth()-building.getRectangle().getWidth()- STARTX;
+                double distance = random.nextDouble(Building.MINIMUM_DISTANCE, maximumDistance);
+                double position = previousBuilding.getBoundsInParent().getMaxX() + distance;
+                if (initial) {
+                    building.setLayoutX(position);
+                } else {
+                    building.getMovementAnimator().moveBy(new Point2D(foreground.localToScene(position, 0).getX()-foreground.getPrefWidth(), 0));
+                }
+            }
+            buildings.add(building);
+            hero.collisionCallbacks.put(building, () -> {
+                if (hero.getScaleY() > 0) return;
+                animateDeath();
+                hero.collisionCallbacks.clear();
+                hero.setDying(true);
+            });
+        }
+    }
+
+    private Background createBackground() {
+        Background background = new Background();
+        for (int i=0; i<2; i++) {
+            BackgroundImage backgroundImage = new BackgroundImage(
+                    new Image(Objects.requireNonNull(getClass().getResourceAsStream("background" + (i+1) + ".png"))),
+                    (double) 10 /(i+1)
+            );
+            backgroundImage.minHeightProperty().bind(background.heightProperty());
+            background.getChildren().add(backgroundImage);
+        }
+        return background;
+    }
+
+    private Hero createHero() {
+        List<Rectangle2D> sprites = new ArrayList<>(List.of(
+                new Rectangle2D(0, 0,130,130),
+                new Rectangle2D(130, 0,130,130),
+                new Rectangle2D(0, 130,130,130),
+                new Rectangle2D(130, 130,130,130)
+        ));
+        Hero hero = new Hero(new Image(Objects.requireNonNull(getClass().getResourceAsStream("spritesheet.png"))),
+                Map.of(
+                     "default", new SpriteSheetGroup(sprites, 2_00_000_000, Hero.SPEED),
+                     "movement", new SpriteSheetGroup(sprites, 2_00_000_000, Hero.SPEED),
+                     "rotation", new SpriteSheetGroup(sprites, 50_000_000, Hero.SPEED)
+                )
+        );
+        hero.setFitWidth(Hero.WIDTH);
+        double height = hero.getImage().getHeight()/hero.getImage().getWidth() * Hero.WIDTH;
+        hero.setFitHeight(height);
+        hero.setTranslateX(-Hero.WIDTH);
+        hero.setTranslateY(0);
+        hero.setLayoutY(-height);
+        hero.setLayoutX(STARTX);
+        hero.getMovementAnimator().getAfterHandlers().add(onMovementFinishedEvent);
+        return hero;
+    }
+
+    private void createCherry() {
+        ImageSprite cherry = new ImageSprite(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Cherry.png"))),
+                Map.of(
+                        "default", new SpriteSheetGroup(List.of(new Rectangle2D(0, 0, 79, 51)), 1, 0),
+                        "idle", new SpriteSheetGroup(List.of(new Rectangle2D(0, 0, 79, 51)), 1, 0),
+                        "pop", new SpriteSheetGroup(List.of(new Rectangle2D(0, 0, 79, 51)), 1, 0)
+                )
+        );
+        cherry.setPreserveRatio(true);
+        cherry.setFitWidth(Hero.WIDTH/2);
+        double position = random.nextDouble(
+                buildings.get(buildings.size()-2).getBoundsInParent().getMaxX(),
+                buildings.get(buildings.size()-1).getBoundsInParent().getMinX()-cherry.getFitWidth()
+        );
+        foreground.getChildren().add(cherry);
+        cherry.animate("idle");
+        cherry.setLayoutX(position);
+        cherry.setLayoutY(cherry.getFitHeight()+5);
+        hero.collisionCallbacks.put(cherry, () -> {
+            System.out.println("Collided with cherry");
+            hero.collisionCallbacks.remove(cherry);
+            cherry.animate("pop");
+            foreground.getChildren().remove(cherry);
+            hero.addCherry();
+        });
+    }
+
+    private final EventHandler<ActionEvent> onMovementFinishedEvent = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            Building lastBuilding = buildings.get(buildings.size()-1);
+            hero.getStick().getRotationAnimator().getAfterHandlers().remove(onStickToppleEvent);
+            if (hero.isDying()) {
+                animateDeath();
+            } else {
+                createBuildings(1);
+                double difference = lastBuilding.localToScene(lastBuilding.getBoundsInLocal()).getMaxX() - STARTX;
+                foreground.panHorizontal(-difference);
+                hero.increaseScore(1);
+            }
+        }
+    };
+
+    private void animateDeath() {
+        if (hero.getScaleY() > 0) hero.flip();
+        hero.getMovementAnimator().interrupt();
+        hero.getMovementAnimator().getAfterHandlers().remove(onMovementFinishedEvent);
+        hero.getMovementAnimator().setSpeedMs(Hero.FALL_SPEED);
+        hero.getMovementAnimator().moveBy(new Point2D(0, Building.HEIGHT+hero.getFitHeight()));
+    }
+
+
+    private boolean scenePointAboveBuilding(double x, Building building) {
+        Bounds buildingInScene = foreground.localToScene(building.getBoundsInParent());
+        System.out.println(buildingInScene);
+        System.out.println(x + " " + buildingInScene.getCenterY());
+        return buildingInScene.contains(x, buildingInScene.getCenterY());
+    }
+
+    private final EventHandler<ActionEvent> onStickToppleEvent = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            double stickTipX = foreground.localToScene(hero.getStick().getBoundsInParent()).getMaxX();
+            Building lastBuilding = buildings.get(buildings.size()-1);
+            boolean landed = scenePointAboveBuilding(stickTipX, lastBuilding);
+            if (landed) {
+                double difference = lastBuilding.localToScene(lastBuilding.getBoundsInLocal()).getMaxX() - STARTX;
+                hero.getMovementAnimator().moveBy(new Point2D(difference, 0));
+                background.panHorizontal(-difference);
+                Bounds perfectBlockInScene = lastBuilding.localToScene(lastBuilding.getPerfectBlock().getBoundsInParent());
+                if (perfectBlockInScene.contains(stickTipX, perfectBlockInScene.getCenterY())) {
+                    hero.addCherry();
+                    lastBuilding.getChildren().remove(lastBuilding.getPerfectBlock());
+                }
+                if (random.nextDouble() > 0) {
+                    createCherry();
+                }
+            } else {
+                hero.getMovementAnimator().moveBy(new Point2D(hero.getStick().getScaleY(), 0));
+                hero.setDying(true);
+            }
+        }
+    };
 
     @FXML
-    public void onPauseButtonClicked() {
+    private void onPauseButtonClicked() {
         StickHero.getInstance().loadFXMLScene("fxml/pause-menu.fxml");
     }
 
-    private Timeline stickTimeline;
-    private Timeline fallTimeline;
-
     @FXML
-    public void onMousePressed() {
-        startExtendStick();
-//        stick.setHeight(stick.getHeight() + 1);
-    }
-
-    @FXML
-    public void onMouseReleased() {
-        stick.setDisable(true);
-        stopExtendStick();
-        fall();
-    }
-
-    private void startExtendStick() {
-        stickTimeline = new Timeline(
-            new KeyFrame(Duration.millis(8), event -> {
-                if (stick.getHeight() < 500){
-                    stick.setHeight(stick.getHeight() + 1);
-                    stick.setLayoutY(stick.getLayoutY() - 1);
-                }
-            })
-        );
-        stickTimeline.setCycleCount(Timeline.INDEFINITE);
-        stickTimeline.play();
-    }
-
-    private void stopExtendStick(){
-        if (stickTimeline != null){
-            stickTimeline.stop();
-        }
-    }
-
-    private void fall(){
-        if (stickTimeline == null){
-            return;
-        }
-        Rotate rotate = new Rotate(0);
-        rotate.setPivotX(stick.getWidth() / 2);
-        rotate.setPivotY(stick.getHeight());
-        stick.getTransforms().add(rotate);
-        fallTimeline = new Timeline(
-            new KeyFrame(Duration.millis((90 - rotate.getAngle()) / 25), event -> {
-//                stick.setRotate(stick.getRotate() + 1);
-                rotate.setAngle(rotate.getAngle() + 1);
-            })
-        );
-        fallTimeline.setCycleCount(90);
-        fallTimeline.play();
-        fallTimeline.setOnFinished(event -> {
-            moveHero();
-        });
-    }
-
-    @FXML
-    public void onMouseClicked() {
-//        if (hero.getTransforms() == null) {
-//            Rotate rotate = new Rotate(0);
-//            rotate.setPivotX(hero.getFitWidth() / 2);
-//            rotate.setPivotY(hero.getFitHeight());
-//            hero.getTransforms().add(rotate);
-//        } else {
-//            Rotate rotate = (Rotate) hero.getTransforms().get(1);
-//            if (rotate.getAngle() == 0) {
-//                rotate.setAngle(180);
-//            } else {
-//                rotate.setAngle(0);
-//            }
-//        }
-    }
-
-    public void moveHero(){
-        Timeline timeline = new Timeline(
-            new KeyFrame(Duration.millis(8), event -> {
-                hero.setLayoutX(hero.getLayoutX() + 1);
-            })
-        );
-        if (checkBounds()){
-            if (checkPerfect()){
-                addScore();
-            }
-            timeline.setOnFinished(event -> {
-                moveBackground();
-            });
-            timeline.setCycleCount((int) (nextBuilding.getLayoutX() - currBuilding.getLayoutX()));
+    private void onMousePressed(MouseEvent mouseEvent) {
+        hint.setVisible(false);
+        if (hero == null) return;
+        if (hero.getMovementAnimator().getStatus() == Animation.Status.RUNNING) {
+            double heroPosition  = foreground.localToScene(hero.getBoundsInParent()).getMaxX();
+            boolean canFlip = !scenePointAboveBuilding(heroPosition-hero.getFitWidth(), buildings.get(buildings.size()-2))
+                            && !(scenePointAboveBuilding(heroPosition, buildings.get(buildings.size()-1))
+                                 && !hero.isDying()
+                            );
+            System.out.println("heroPosition = " + heroPosition);
+            System.out.println("hero.getFitWidth() = " + hero.getFitWidth());
+            System.out.println("scenePointAboveBuilding(heroPosition-hero.getFitWidth(), buildings.get(buildings.size()-2)) = " + scenePointAboveBuilding(heroPosition - hero.getFitWidth(), buildings.get(buildings.size() - 2)));
+            System.out.println("scenePointAboveBuilding(heroPosition, buildings.get(buildings.size()-1)) = " + scenePointAboveBuilding(heroPosition, buildings.get(buildings.size() - 1)));
+            System.out.println("hero.isDying() = " + hero.isDying());
+            System.out.println("canFlip = " + canFlip);
+            if (canFlip) hero.flip();
         } else {
-            timeline.setOnFinished(event -> {
-                heroFall();
-            });
-            timeline.setCycleCount((int) (stick.getHeight() + 37));
+            if (hero.isDying()) return;
+            Stick stick = new Stick();
+            hero.setStick(stick);
+            foreground.getChildren().add(stick);
+            stick.setLayoutX(buildings.get(buildings.size()-2).getBoundsInParent().getMaxX());
+            stick.getRotationAnimator().getAfterHandlers().add(onStickToppleEvent);
+            stick.startExtendStick();
         }
-        timeline.play();
     }
 
-    private void moveBackground() {
-        addScore();
-        Timeline timeline = new Timeline(
-            new KeyFrame(Duration.millis(4), event -> {
-                hero.setLayoutX(hero.getLayoutX() - 1);
-                stick.setLayoutX(stick.getLayoutX() - 1);
-                currBuilding.setLayoutX(currBuilding.getLayoutX() - 1);
-                nextBuilding.setLayoutX(nextBuilding.getLayoutX() - 1);
-                nextPerfectBLock.setLayoutX(nextPerfectBLock.getLayoutX() - 1);
-            })
-        );
-        timeline.setCycleCount((int) (hero.getLayoutX() - 37));
-        timeline.play();
+    @FXML
+    private void onMouseReleased(MouseEvent mouseEvent) {
+        if (hero == null) return;
+        if (hero.getStick() == null) return;
+        if (hero.isDying()) return;
+        if (hero.getMovementAnimator().getStatus() != Animation.Status.RUNNING) {
+            hero.getStick().stopExtendStick();
+        }
     }
 
-    private boolean checkBounds(){
-        if (stick.getLayoutX() + stick.getHeight() < nextBuilding.getLayoutX()) return false;
-        else return !(stick.getLayoutX() + stick.getHeight() > nextBuilding.getLayoutX() + nextBuilding.getWidth());
+    @FXML
+    private void onMouseClicked(MouseEvent mouseEvent) {
     }
 
-    private boolean checkPerfect(){
-        if (stick.getLayoutX() + stick.getHeight() < nextPerfectBLock.getLayoutX()) return false;
-        else return !(stick.getLayoutX() + stick.getHeight() > nextPerfectBLock.getLayoutX() + nextPerfectBLock.getWidth());
-    }
-
-    private void heroFall(){
-        Timeline timeline = new Timeline(
-            new KeyFrame(Duration.millis(1), event -> {
-                hero.setLayoutY(hero.getLayoutY() + 1);
-            })
-        );
-        timeline.setCycleCount((int) (650 - hero.getLayoutY()));
-        hero.setRotate(90);
-        timeline.setOnFinished(event -> {
-            StickHero.getInstance().loadFXMLScene("fxml/game-over.fxml");
-        });
-        timeline.play();
-    }
-
-    private void addScore(){
-        score.setText(Integer.toString(Integer.parseInt(score.getText()) + 1));
-    }
 }
