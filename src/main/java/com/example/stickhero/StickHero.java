@@ -46,7 +46,7 @@ public class StickHero extends Application {
         Cleanup cleanup = new Cleanup();
         cleanup.setPeriod(Duration.seconds(2));
 //        cleanup.start();
-        loadFXMLScene("fxml/in-game.fxml");
+        loadFXMLScene("fxml/main-menu.fxml");
         stage.show();
     }
 

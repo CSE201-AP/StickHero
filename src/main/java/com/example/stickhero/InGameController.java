@@ -33,6 +33,10 @@ public class InGameController {
     @FXML
     public AnchorPane pauseMenu;
     @FXML
+    public Label highScore;
+    @FXML
+    public Label prevScore;
+    @FXML
     private AnchorPane inGameScreen;
     @FXML
     private AnchorPane gameOver;
@@ -357,6 +361,7 @@ public class InGameController {
         foreground.setVisible(true);
         inGameScreen.setVisible(true);
         System.out.println(foreground.getChildren().contains(hero));
+//        hero.getMovementAnimator().getAfterHandlers().remove(onDeathEvent);
         hero.setLayoutX(getLocalInForeground(STARTX));
         foreground.getChildren().remove(hero.getStick());
         hero.setLayoutY(-hero.getFitHeight());
