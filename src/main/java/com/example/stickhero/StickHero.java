@@ -41,6 +41,18 @@ public class StickHero extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         deserialize();
+        stage.setOnCloseRequest((event) -> {
+            try {
+                if (hero != null){
+                    progress.setCherries(hero.getCherries());
+                    progress.setHighScore(Math.max(progress.getHighScore(), hero.getScore()));
+                    progress.setPastScore(hero.getScore());
+                }
+                serialize();
+            } catch (IOException e) {
+                e.printStackTrace();
+         }
+        });
         this.stage = stage;
         stage.setTitle("Stick Hero");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Hero.png"))));

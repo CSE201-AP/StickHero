@@ -107,7 +107,7 @@ public class InGameController {
         reviveOption.setVisible(true);
         gameOver.setVisible(false);
         pauseMenu.setVisible(false);
-        if (app.getHero() == null) {
+        if (hero == null) {
             createBackground();
             hero = createHero();
             app.setHero(hero);
@@ -152,16 +152,9 @@ public class InGameController {
                 double distance = random.nextDouble(Building.MINIMUM_DISTANCE, maximumDistance);
                 double position = previousBuilding.getBoundsInParent().getMaxX() + distance;
                 positions.set(positions.size()-1, foreground.localToScene(position, 0).getX()-foreground.getPrefWidth());
-                System.out.println("Expected final translation = " + positions.get(positions.size()-1));
                 if (initial) {
                     building.setLayoutX(position);
                 } else {
-                    building.getMovementAnimator().getBeforeCallbacks().add(() -> {
-                        System.out.println("Started animation");
-                    });
-                    building.getMovementAnimator().getAfterHandlers().add((e) -> {
-                        System.out.println("Stopped animation");
-                    });
                     building.getMovementAnimator().moveBy(new Point2D(foreground.localToScene(position, 0).getX() - foreground.getPrefWidth(), 0));
                 }
             }
@@ -377,7 +370,6 @@ public class InGameController {
         foreground.setVisible(true);
         inGameScreen.setVisible(true);
         hero.getMovementAnimator().setSpeedMs(Hero.SPEED);
-//        System.out.println(foreground.getChildren().contains(hero));
         hero.getMovementAnimator().getAfterHandlers().remove(onDeathEvent);
         foreground.getChildren().remove(hero.getStick());
         hero.setTranslateX(0);
