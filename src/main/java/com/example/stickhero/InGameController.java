@@ -23,11 +23,16 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import javax.swing.*;
 import java.io.ObjectOutputStream;
 import java.util.*;
 
 public class InGameController {
     private static final double STARTX = 60;
+    @FXML
+    private AnchorPane inGameScreen;
+    @FXML
+    private AnchorPane gameOver;
     @FXML
     private Label scoreLabel;
     @FXML
@@ -42,12 +47,14 @@ public class InGameController {
     private Hero hero;
     private List<Building> buildings = new ArrayList<>();
     private static final Random random = new Random();
+    private static boolean revived = false;
 //    @FXML
 //    private static final Double HEIGHT = Building.HEIGHT;
 
 
     public void initialize() {
         app = StickHero.getInstance();
+        gameOver.setVisible(false);
         createBackground();
         hero = createHero();
         app.setHero(hero);
@@ -210,8 +217,17 @@ public class InGameController {
         hero.getMovementAnimator().setSpeedMs(Hero.FALL_SPEED);
         hero.getMovementAnimator().moveBy(new Point2D(0, Building.HEIGHT+hero.getFitHeight()));
         Sound.getSound("dead").play();
+        hero.getMovementAnimator().getAfterHandlers().add(onDeathEvent);
     }
 
+    private final EventHandler<ActionEvent> onDeathEvent = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+//            foreground.setVisible(false);
+            inGameScreen.setVisible(false);
+            gameOver.setVisible(true);
+        }
+    };
 
     private boolean scenePointAboveBuilding(double x, Building building) {
         Bounds buildingInScene = foreground.localToScene(building.getBoundsInParent());
@@ -286,4 +302,25 @@ public class InGameController {
     private void onMouseClicked(MouseEvent mouseEvent) {
     }
 
+    @FXML
+    public void onHomeButtonClicked(ActionEvent actionEvent) {
+        StickHero.getInstance().loadFXMLScene("fxml/main-menu.fxml");
+    }
+
+    @FXML
+    public void onReviveButtonClicked(ActionEvent actionEvent) {
+        gameOver.setVisible(false);
+        foreground.setVisible(true);
+        inGameScreen.setVisible(true);
+    }
+
+    @FXML
+    public void onRestartButtonClicked(ActionEvent actionEvent) {
+        gameOver.setVisible(false);
+        foreground.setVisible(true);
+        inGameScreen.setVisible(true);
+        buildings.clear();
+        foreground.getChildren().clear();
+        initialize();
+    }
 }
