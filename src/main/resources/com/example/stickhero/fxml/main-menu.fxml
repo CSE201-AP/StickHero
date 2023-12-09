@@ -14,11 +14,12 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stickhero.MainMenuController">
    <Background fx:id="background"/>
    <children>
+      <Rectangle style="-fx-background-color: rgba(0, 0, 0, 1)" opacity="0.2" height="600.0" width="335"/>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="78.0" layoutY="23.0" prefHeight="223.0" prefWidth="178.0" style="-fx-font-style: #1c4f05; -fx-font-family: Roboto; -fx-font-size: 60; -fx-font-weight: Bold;" text="STICKHERO" textFill="BLACK" textAlignment="CENTER" wrapText="true" />
-            <Button fx:id="playButton" opacity="0.5" layoutX="102.0" layoutY="234.0" mnemonicParsing="false" onAction="#onPlayButtonClicked" prefHeight="130.0" prefWidth="130.0" style="-fx-font-family: Roboto; -fx-font-size: 28; -fx-background-radius: 100; -fx-background-color: #dde3ea;" text="PLAY" onMouseEntered="#onPlayButtonHover" onMouseExited="#onPlayButtonExit"/>
-            <Button fx:id="unmuteButton" layoutX="143.0" layoutY="511.0" minWidth="38.0" mnemonicParsing="false" onAction="#onSoundButtonClicked" prefHeight="38.0" prefWidth="31.0" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <Button fx:id="playButton" opacity="0.7" layoutX="102.0" layoutY="234.0" mnemonicParsing="false" onAction="#onPlayButtonClicked" prefHeight="130.0" prefWidth="130.0" style="-fx-font-family: Roboto; -fx-font-size: 28; -fx-background-radius: 100; -fx-background-color: #dde3ea;" text="PLAY" onMouseEntered="#onPlayButtonHover" onMouseExited="#onPlayButtonExit"/>
+            <Button fx:id="unmuteButton" opacity="0.7" layoutX="143.0" layoutY="511.0" minWidth="38.0" mnemonicParsing="false" onAction="#onSoundButtonClicked" prefHeight="38.0" prefWidth="31.0" style="-fx-background: transparent; -fx-background-color: transparent;" onMouseEntered="#onMuteButtonHover" onMouseExited="#onMuteButtonExit">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0">
                      <image>
@@ -27,7 +28,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="muteButton" layoutX="143.0" layoutY="511.0" minWidth="38.0" mnemonicParsing="false" onAction="#onSoundButtonClicked" prefHeight="38.0" prefWidth="31.0" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <Button fx:id="muteButton" opacity="0.7" layoutX="143.0" layoutY="511.0" minWidth="38.0" mnemonicParsing="false" onAction="#onSoundButtonClicked" prefHeight="38.0" prefWidth="31.0" style="-fx-background: transparent; -fx-background-color: transparent;" onMouseEntered="#onMuteButtonHover" onMouseExited="#onMuteButtonExit">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0">
                      <image>
@@ -37,8 +38,8 @@
                </graphic>
             </Button>
 
-            <Rectangle opacity="0.5" arcHeight="40.0" arcWidth="40.0" fill="#dde3ea" height="104.0" layoutX="39.0" layoutY="385.0" smooth="false" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-arc-width: 20; -fx-arc-height: 20;" width="260.0" />
-            <Label layoutX="50.0" layoutY="406.0" prefHeight="22.0" prefWidth="118.0" text="Previous Score:">
+            <Rectangle opacity="0.7" arcHeight="40.0" arcWidth="40.0" fill="#dde3ea" height="104.0" layoutX="39.0" layoutY="385.0" smooth="false" stroke="TRANSPARENT" strokeType="INSIDE" style="-fx-arc-width: 20; -fx-arc-height: 20;" width="260.0" />
+            <Label layoutX="50.0" layoutY="406.0" prefHeight="22.0" prefWidth="118.0" text="Previous Score:" style="-fx-font-style: Roboto">
                <font>
                   <Font size="15.0" />
                </font>

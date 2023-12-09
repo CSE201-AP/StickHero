@@ -16,6 +16,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -45,6 +46,16 @@ public class InGameController {
     public Label cherriesCollected;
     @FXML
     public Label perfectLabel;
+    @FXML
+    public Button pauseButton;
+    @FXML
+    public Button resumeButton;
+    @FXML
+    public Button reviveButton;
+    @FXML
+    public Button restartButton;
+    @FXML
+    public Button homeButton;
     @FXML
     private AnchorPane inGameScreen;
     @FXML
@@ -454,5 +465,39 @@ public class InGameController {
         progress.setCherries(hero.getCherries());
         StickHero.serialize();
         System.exit(0);
+    }
+
+    @FXML
+    public void onMouseHovering(MouseEvent mouseEvent) {
+        pauseButton.setOpacity(1);
+        resumeButton.setOpacity(1);
+        reviveButton.setOpacity(1);
+    }
+
+    @FXML
+    public void onMouseExiting(MouseEvent mouseEvent) {
+        pauseButton.setOpacity(0.7);
+        resumeButton.setOpacity(0.7);
+        reviveButton.setOpacity(0.7);
+    }
+
+    @FXML
+    public void onMouseExitedRestart(MouseEvent mouseEvent) {
+        restartButton.setOpacity(0.7);
+    }
+
+    @FXML
+    public void onMouseEnteredRestart(MouseEvent mouseEvent) {
+        restartButton.setOpacity(1);
+    }
+
+    @FXML
+    public void onMouseExitedHome(MouseEvent mouseEvent) {
+        homeButton.setOpacity(0.7);
+    }
+
+    @FXML
+    public void onMouseEnteredHome(MouseEvent mouseEvent) {
+        homeButton.setOpacity(1);
     }
 }

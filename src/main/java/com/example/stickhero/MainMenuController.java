@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
 
@@ -99,6 +100,18 @@ public class MainMenuController {
     }
     @FXML
     public void onPlayButtonExit() {
-        playButton.setOpacity(0.5);
+        playButton.setOpacity(0.7);
+    }
+
+    @FXML
+    public void onMuteButtonExit(MouseEvent mouseEvent) {
+        muteButton.setOpacity(0.7);
+        unmuteButton.setOpacity(0.7);
+    }
+
+    @FXML
+    public void onMuteButtonHover(MouseEvent mouseEvent) {
+        muteButton.setOpacity(1);
+        unmuteButton.setOpacity(1);
     }
 }
