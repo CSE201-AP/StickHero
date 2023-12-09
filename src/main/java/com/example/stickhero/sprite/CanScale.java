@@ -108,7 +108,7 @@ public class CanScale implements ScaleAnimator {
     @Override
     public void resume() {
         if (transition != null) {
-            transition.pause();
+            transition.play();
         }
     }
 }

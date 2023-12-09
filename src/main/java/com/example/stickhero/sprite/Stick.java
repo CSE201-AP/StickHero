@@ -17,7 +17,7 @@ public class Stick extends Rectangle implements Sprite {
     private MovementAnimator movementAnimator = new CannotMove(this);
     private RotationAnimator rotationAnimator = new CanRotate(this, 0.4);
     private ScaleAnimator scaleAnimator = new CanScale(this, 0.2);
-    private static final AudioClip stickExtendSound = Sound.getSound("stick_grow_loop");
+    private static AudioClip stickExtendSound;
 
     public Stick(EventHandler<ActionEvent> handler){
         this();
@@ -31,6 +31,7 @@ public class Stick extends Rectangle implements Sprite {
 
     public void startExtendStick() {
         scaleAnimator.scaleTo(thickness, Stick.MAX_HEIGHT, 0, -getHeight()/2);
+        stickExtendSound = Sound.getSound("stick_grow_loop");
         stickExtendSound.setCycleCount(AudioClip.INDEFINITE);
         stickExtendSound.play();
     }

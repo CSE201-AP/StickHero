@@ -113,6 +113,11 @@
                     <Font name="Roboto Bold" size="26.0"/>
                 </font>
             </Label>
+            <Label fx:id="perfectLabel" layoutY="117" alignment="CENTER" text="PERFECT!" textFill="#dde3ea" visible="false" prefWidth="335">
+                <font>
+                    <Font name="Roboto Bold" size="18.0"/>
+                </font>
+            </Label>
             <Label fx:id="hint" layoutX="86.0" layoutY="117.0" prefHeight="46.0" prefWidth="162.0"
                    text="Hold your finger on screen to stretch out the stick" textAlignment="CENTER" textFill="#737373"
                    wrapText="true">

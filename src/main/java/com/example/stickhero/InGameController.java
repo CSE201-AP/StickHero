@@ -44,6 +44,8 @@ public class InGameController {
     @FXML
     public Label cherriesCollected;
     @FXML
+    public Label perfectLabel;
+    @FXML
     private AnchorPane inGameScreen;
     @FXML
     private AnchorPane gameOver;
@@ -79,6 +81,7 @@ public class InGameController {
             if (Integer.parseInt(cherriesCollected.getText()) < 5){
                 reviveOption.setVisible(false);
             }
+            Sound.getSound("victory").play();
         }
     };
 
@@ -94,6 +97,8 @@ public class InGameController {
                 background.panHorizontal(-difference);
                 Bounds perfectBlockInScene = lastBuilding.localToScene(lastBuilding.getPerfectBlock().getBoundsInParent());
                 if (perfectBlockInScene.contains(stickTipX, perfectBlockInScene.getCenterY())) {
+                    Sound.getSound("perfect").play();
+                    perfectLabel.setVisible(true);
                     hero.increaseScore(1);
                     lastBuilding.getChildren().remove(lastBuilding.getPerfectBlock());
                 }
@@ -223,6 +228,7 @@ public class InGameController {
                 animateDeath();
             } else {
                 Sound.getSound("score").play();
+                perfectLabel.setVisible(false);
                 List<Double> offsets = createBuildings(1);
                 if (random.nextDouble(-1, 1) > 0) {
                     createCherry(offsets.get(0));
@@ -294,6 +300,7 @@ public class InGameController {
 
     @FXML
     private void onPauseButtonClicked() {
+        Sound.getSound("button").play();
         pauseMenu.setVisible(true);
         inGameScreen.setVisible(false);
         foreground.setVisible(false);
@@ -332,7 +339,10 @@ public class InGameController {
                     && !(scenePointAboveBuilding(heroPosition, buildings.get(buildings.size() - 1))
                     && !hero.isDying()
             );
-            if (canFlip) hero.flip();
+            if (canFlip) {
+                hero.flip();
+                Sound.getSound("roll_up_down").play();
+            }
         } else {
             if (hero.isDying()) return;
             boolean idle = (hero.getStick() == null) || (hero.getStick() != null
@@ -367,11 +377,13 @@ public class InGameController {
     @FXML
     public void onHomeButtonClicked(ActionEvent actionEvent) {
         cleanup.cancel();
+        Sound.getSound("button").play();
         StickHero.getInstance().loadFXMLScene("fxml/main-menu.fxml");
     }
 
     @FXML
     public void onReviveButtonClicked(ActionEvent actionEvent) {
+        Sound.getSound("victory").play();
         revived = true;
         gameOver.setVisible(false);
         foreground.setVisible(true);
@@ -398,6 +410,7 @@ public class InGameController {
 
     @FXML
     public void onRestartButtonClicked(ActionEvent actionEvent) {
+        Sound.getSound("button").play();
         cleanup.cancel();
         app.setHero(null);
         revived = false;
@@ -406,6 +419,7 @@ public class InGameController {
 
     @FXML
     public void onResumeButtonClick(ActionEvent actionEvent) {
+        Sound.getSound("button").play();
         pauseMenu.setVisible(false);
         inGameScreen.setVisible(true);
         foreground.setVisible(true);
@@ -432,6 +446,8 @@ public class InGameController {
 
     @FXML
     public void onSaveAndExitButtonClick(ActionEvent actionEvent) throws IOException {
+        cleanup.cancel();
+        Sound.getSound("button").play();
         Progress progress = StickHero.getInstance().getProgress();
         progress.setPastScore(hero.getScore());
         progress.setHighScore(Math.max(hero.getScore(), progress.getHighScore()));

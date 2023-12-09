@@ -96,7 +96,7 @@ public class CanMove implements MovementAnimator {
     @Override
     public void resume() {
         if (transition != null) {
-            transition.pause();
+            transition.play();
         }
     }
 }
