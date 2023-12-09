@@ -11,7 +11,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-<junit.version>5.9.2</junit.version>  </properties>
+<junit.version>4.13.2</junit.version>  </properties>
 
   <dependencies>
     <dependency>
@@ -37,24 +37,12 @@
       <version>22-ea+16</version>
     </dependency>
 
-<dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.junit.platform</groupId>-->
-<!--      <artifactId>junit-platform-suite-engine</artifactId>-->
-<!--      <version>1.10.1</version>-->
-<!--      <scope>test</scope>-->
-<!--    </dependency>-->
   </dependencies>
 
   <build>
@@ -66,6 +54,14 @@
         <configuration>
           <source>20</source>
           <target>20</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.2</version>
+        <configuration>
+          <test>TestSuite.class</test>
         </configuration>
       </plugin>
       <plugin>

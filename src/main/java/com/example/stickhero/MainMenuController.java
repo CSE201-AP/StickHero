@@ -93,14 +93,10 @@ public class MainMenuController {
         }
     }
 
-    // change transparency of play button when mouse hover while other features stay the same
-
     @FXML
     public void onPlayButtonHover() {
         playButton.setOpacity(1);
     }
-
-    // change transparency of play button when mouse exit
     @FXML
     public void onPlayButtonExit() {
         playButton.setOpacity(0.5);
