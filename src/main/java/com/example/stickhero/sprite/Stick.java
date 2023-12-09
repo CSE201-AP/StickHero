@@ -2,8 +2,10 @@ package com.example.stickhero.sprite;
 
 import com.example.stickhero.Callback;
 import com.example.stickhero.CollisionTimer;
+import com.example.stickhero.Sound;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
 
 import javax.swing.*;
@@ -16,8 +18,8 @@ public class Stick extends Rectangle implements Sprite {
     private MovementAnimator movementAnimator = new CannotMove(this);
     private RotationAnimator rotationAnimator = new CanRotate(this, 0.4);
     private ScaleAnimator scaleAnimator = new CanScale(this, 0.2);
-//    private static final AudioClip stickExtendSound = Sound.getSound("stick_grow_loop");
-//    private static final AudioClip stickFallSound = Sound.getSound("fall");
+    private static final AudioClip stickExtendSound = Sound.getSound("stick_grow_loop");
+
     public Stick(EventHandler<ActionEvent> handler){
         this();
         rotationAnimator.getAfterHandlers().add(handler);
@@ -30,15 +32,19 @@ public class Stick extends Rectangle implements Sprite {
 
     public void startExtendStick() {
         scaleAnimator.scaleTo(thickness, Stick.MAX_HEIGHT, 0, -getHeight()/2);
+        stickExtendSound.setCycleCount(AudioClip.INDEFINITE);
+        stickExtendSound.play();
     }
 
     public void stopExtendStick(){
         scaleAnimator.interrupt();
+        stickExtendSound.stop();
         topple();
     }
 
     public void topple(){
         rotationAnimator.rotateBy(90, 0, -getHeight()/2);
+        Sound.getSound("fall").play();
     }
 
     @Override

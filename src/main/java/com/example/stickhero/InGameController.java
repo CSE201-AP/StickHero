@@ -18,6 +18,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.AudioClip;
 
 import java.util.*;
 
@@ -104,6 +105,9 @@ public class InGameController {
             backgroundImage.minHeightProperty().bind(background.heightProperty());
             background.getChildren().add(backgroundImage);
         }
+        AudioClip backgroundSound = Sound.getSound("bg_country");
+        backgroundSound.setCycleCount(AudioClip.INDEFINITE);
+        backgroundSound.play();
         return background;
     }
 
@@ -152,6 +156,7 @@ public class InGameController {
         cherry.setLayoutY(cherry.getFitHeight()+5);
         hero.collisionCallbacks.put(cherry, () -> {
             System.out.println("Collided with cherry");
+            Sound.getSound("eating_fruit").play();
             hero.collisionCallbacks.remove(cherry);
             cherry.animate("pop");
             foreground.getChildren().remove(cherry);
@@ -167,6 +172,7 @@ public class InGameController {
             if (hero.isDying()) {
                 animateDeath();
             } else {
+                Sound.getSound("score").play();
                 createBuildings(1);
                 double difference = lastBuilding.localToScene(lastBuilding.getBoundsInLocal()).getMaxX() - STARTX;
                 foreground.panHorizontal(-difference);
@@ -181,6 +187,7 @@ public class InGameController {
         hero.getMovementAnimator().getAfterHandlers().remove(onMovementFinishedEvent);
         hero.getMovementAnimator().setSpeedMs(Hero.FALL_SPEED);
         hero.getMovementAnimator().moveBy(new Point2D(0, Building.HEIGHT+hero.getFitHeight()));
+        Sound.getSound("dead").play();
     }
 
 
@@ -243,7 +250,7 @@ public class InGameController {
             Stick stick = new Stick();
             hero.setStick(stick);
             foreground.getChildren().add(stick);
-            stick.setLayoutX(buildings.get(buildings.size()-2).getBoundsInParent().getMaxX());
+            stick.setLayoutX(buildings.get(buildings.size()-2).getBoundsInParent().getMaxX()-2);
             stick.getRotationAnimator().getAfterHandlers().add(onStickToppleEvent);
             stick.startExtendStick();
         }
