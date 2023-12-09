@@ -176,6 +176,9 @@ public class InGameController {
                 createBuildings(1);
                 double difference = lastBuilding.localToScene(lastBuilding.getBoundsInLocal()).getMaxX() - STARTX;
                 foreground.panHorizontal(-difference);
+                if (random.nextDouble(-1, 1) > 0) {
+                    createCherry();
+                }
                 hero.increaseScore(1);
             }
         }
@@ -184,7 +187,7 @@ public class InGameController {
     private void animateDeath() {
         if (hero.getScaleY() > 0) hero.flip();
         hero.getMovementAnimator().interrupt();
-        hero.getMovementAnimator().getAfterHandlers().remove(onMovementFinishedEvent);
+//        hero.getMovementAnimator().getAfterHandlers().remove(onMovementFinishedEvent);
         hero.getMovementAnimator().setSpeedMs(Hero.FALL_SPEED);
         hero.getMovementAnimator().moveBy(new Point2D(0, Building.HEIGHT+hero.getFitHeight()));
         Sound.getSound("dead").play();
@@ -213,9 +216,9 @@ public class InGameController {
                     hero.addCherry();
                     lastBuilding.getChildren().remove(lastBuilding.getPerfectBlock());
                 }
-                if (random.nextDouble() > 0) {
-                    createCherry();
-                }
+//                if (random.nextDouble() > 0) {
+//                    createCherry();
+//                }
             } else {
                 hero.getMovementAnimator().moveBy(new Point2D(hero.getStick().getScaleY(), 0));
                 hero.setDying(true);
