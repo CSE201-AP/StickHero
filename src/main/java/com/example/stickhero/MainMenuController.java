@@ -32,11 +32,6 @@ public class MainMenuController {
     }
 
     @FXML
-    public void onLoadButtonClicked() {
-        StickHero.getInstance().loadFXMLScene("fxml/in-game.fxml");
-    }
-
-    @FXML
     public void onSoundButtonClicked(ActionEvent event) {
         if (toggle){
             unmuteButton.setVisible(true);
@@ -50,6 +45,9 @@ public class MainMenuController {
 
     public void initialize() {
         app = StickHero.getInstance();
+        Progress progress = app.getProgress();
+        previousScore.setText(String.valueOf(progress.getPastScore()));
+        highScore.setText(String.valueOf(progress.getHighScore()));
         createBackground();
     }
 

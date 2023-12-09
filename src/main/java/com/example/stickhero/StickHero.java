@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.Objects;
 
 public class StickHero extends Application {
@@ -23,6 +23,7 @@ public class StickHero extends Application {
     private Hero hero;
     private static Foreground foreground;
     private Background background;
+    private static Progress progress = new Progress();
 
     public static void main(String[] args) {
         launch(args);
@@ -38,7 +39,8 @@ public class StickHero extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IOException {
+        deserialize();
         this.stage = stage;
         stage.setTitle("Stick Hero");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Hero.png"))));
@@ -102,5 +104,42 @@ public class StickHero extends Application {
 
     void setBackground(Background background) {
         this.background = background;
+    }
+
+    public static void deserialize() throws IOException {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new FileInputStream("PastProgress.txt"));
+            Object o = in.readObject();
+            progress = (Progress) o;
+        } catch (IOException | ClassNotFoundException e) {
+//            e.printStackTrace();
+        } finally {
+            if (in != null){
+                in.close();
+            }
+        }
+    }
+
+    public static void serialize() throws IOException {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(new FileOutputStream("PastProgress.txt"));
+            out.writeObject(progress);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (out != null){
+                out.close();
+            }
+        }
+    }
+
+    public Progress getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Progress progress) {
+        this.progress = progress;
     }
 }
