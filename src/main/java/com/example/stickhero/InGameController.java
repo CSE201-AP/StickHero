@@ -24,6 +24,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.*;
@@ -58,6 +59,7 @@ public class InGameController {
     private Label hint;
     private StickHero app;
     private Hero hero;
+    private Cleanup cleanup;
 //    @FXML
 //    private static final Double HEIGHT = Building.HEIGHT;
     private List<Building> buildings = new ArrayList<>();
@@ -124,6 +126,10 @@ public class InGameController {
         hero.setCherriesProperty(progress.getCherries());
         scoreLabel.setText(Integer.toString(hero.getScore()));
         cherriesLabel.setText(Integer.toString(hero.getCherries()));
+
+        cleanup = new Cleanup(foreground);
+        cleanup.setPeriod(Duration.seconds(2));
+        cleanup.start();
     }
 
     private double getLocalInForeground(double x) {
@@ -360,6 +366,7 @@ public class InGameController {
 
     @FXML
     public void onHomeButtonClicked(ActionEvent actionEvent) {
+        cleanup.cancel();
         StickHero.getInstance().loadFXMLScene("fxml/main-menu.fxml");
     }
 
@@ -385,10 +392,13 @@ public class InGameController {
         hero.setStick(null);
         hero.setDying(false);
         reviveOption.setVisible(false);
+        StickHero.getInstance().getProgress().setCherries(hero.getCherries() - 5);
+        hero.setCherriesProperty(hero.getCherries() - 5);
     }
 
     @FXML
     public void onRestartButtonClicked(ActionEvent actionEvent) {
+        cleanup.cancel();
         app.setHero(null);
         revived = false;
         app.loadFXMLScene("fxml/in-game.fxml");

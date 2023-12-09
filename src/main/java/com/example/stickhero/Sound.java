@@ -16,6 +16,9 @@ public class Sound {
             AudioClip audioClip = new AudioClip(sound.getSource());
             sounds.put(soundName, audioClip);
         }
+        if (StickHero.getInstance().getMute()){
+            return sounds.get("sounds/blank.mp3");
+        }
         return sounds.get(soundName);
     }
 }

@@ -24,6 +24,7 @@ public class StickHero extends Application {
     private static Foreground foreground;
     private Background background;
     private static Progress progress = new Progress();
+    private static boolean mute = false;
 
     public static void main(String[] args) {
         launch(args);
@@ -51,15 +52,13 @@ public class StickHero extends Application {
                 serialize();
             } catch (IOException e) {
                 e.printStackTrace();
-         }
+            }
         });
         this.stage = stage;
         stage.setTitle("Stick Hero");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/Hero.png"))));
+//        stage.setResizable(false);
 
-        Cleanup cleanup = new Cleanup();
-        cleanup.setPeriod(Duration.seconds(2));
-//        cleanup.start();
         loadFXMLScene("fxml/main-menu.fxml");
         stage.show();
     }
@@ -73,24 +72,6 @@ public class StickHero extends Application {
             System.out.println(e.getMessage());
             System.out.printf("Missing resource: %s\n", resource);
             System.exit(1);
-        }
-    }
-
-    private class Cleanup extends ScheduledService<Void> {
-        @Override
-        protected Task<Void> createTask() {
-            return new Task<>() {
-                @Override
-                protected Void call() {
-//                    Platform.runLater(() -> {
-    //                    System.out.println("Cleaning up")
-    //                    foreground.getChildren().removeIf((node) -> {
-    //                        return node.getLayoutX() <= -node.getBoundsInLocal().getWidth();
-    //                    });
-//                    });
-                    return null;
-                }
-            };
         }
     }
 
@@ -153,5 +134,13 @@ public class StickHero extends Application {
 
     public void setProgress(Progress progress) {
         this.progress = progress;
+    }
+
+    public boolean getMute(){
+        return mute;
+    }
+
+    public void setMute(boolean mute){
+        this.mute = mute;
     }
 }

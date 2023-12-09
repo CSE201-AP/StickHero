@@ -33,12 +33,15 @@ public class MainMenuController {
 
     @FXML
     public void onSoundButtonClicked(ActionEvent event) {
+//        Sounds.getSound();
         if (toggle){
             unmuteButton.setVisible(true);
             muteButton.setVisible(false);
+            StickHero.getInstance().setMute(true);
         } else {
             muteButton.setVisible(true);
             unmuteButton.setVisible(false);
+            StickHero.getInstance().setMute(false);
         }
         toggle ^= true;
     }
