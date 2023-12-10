@@ -1,66 +1,45 @@
-package com.example.stickhero.spritesheet;
+package com.example.stickhero.sprite;
 
-import com.example.stickhero.spritesheet.CustomAnimationTimer;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.testfx.framework.junit.ApplicationTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
-public class CustomAnimationTimerTest {
-    private static final long LENGTHNS = 10;
-    private CountingCustomAnimationTimer countingCustomAnimationTimer;
+public class CanRotateTest extends ApplicationTest {
 
-    @BeforeEach()
+    private Rectangle rectangle;
+    private RotationAnimator rotateAnimator;
+    private static final double SPEEDMS = 100;
+
+    @Override
+    public void start(Stage stage) {
+        rectangle = new Rectangle(0, 0, 1, 1);
+        rotateAnimator = new CanRotate(rectangle, SPEEDMS);
+        stage.setScene(new Scene(new StackPane(rectangle), 100, 100));
+//        stage.show();
+    }
+
+    @BeforeEach
     public void setUp() {
-        countingCustomAnimationTimer = new CountingCustomAnimationTimer(LENGTHNS);
+        rectangle.setRotate(0);
     }
 
     @Test
-    void testHandleCalledFirstTime() {
-        countingCustomAnimationTimer.handle(0);
-        assertEquals(1, countingCustomAnimationTimer.getUserHandleCount(), "User handle() should be called once in first CustomAnimationTimer handle");
+    public void testRotateToSimple() {
+        rotateAnimator.rotateTo(90);
+        sleep(500);
+        assertEquals(90, rectangle.getRotate(), 1e-6);
     }
 
     @Test
-    void testHandleNotCalledInInterval() {
-        countingCustomAnimationTimer.handle(0);
-        countingCustomAnimationTimer.handle(5);
-        assertEquals(1, countingCustomAnimationTimer.getUserHandleCount(), "User handle() should not be called again in same interval length");
-    }
-
-    @Test
-    void testHandleCalledAtInterval() {
-        countingCustomAnimationTimer.handle(0);
-        countingCustomAnimationTimer.handle(LENGTHNS);
-        assertEquals(2, countingCustomAnimationTimer.getUserHandleCount(), "User handle() should be called at end of interval length");
-    }
-
-    @Test
-    void testHandleCalledAfterInterval() {
-        countingCustomAnimationTimer.handle(0);
-        countingCustomAnimationTimer.handle(LENGTHNS+1);
-        assertEquals(2, countingCustomAnimationTimer.getUserHandleCount(), "User handle() should be called after end of interval length");
-    }
-
-    @Test
-    void testHandleResetsLastCallTime() {
-        countingCustomAnimationTimer.handle(0);
-        countingCustomAnimationTimer.handle(LENGTHNS);
-        countingCustomAnimationTimer.handle(LENGTHNS + 1);
-        assertEquals(2, countingCustomAnimationTimer.getUserHandleCount(), "Last call time should be reset on invocation");
-    }
-
-    private static class CountingCustomAnimationTimer extends CustomAnimationTimer {
-        private int userHandleCount = 0;
-        public CountingCustomAnimationTimer(long lengthNs) {
-            super(lengthNs);
-        }
-        @Override
-        public void handle() {
-            userHandleCount += 1;
-        }
-        public int getUserHandleCount() {
-            return userHandleCount;
-        }
+    public void testRotateBySimple() {
+        rotateAnimator.rotateBy(90);
+        sleep(500);
+        assertEquals(90, rectangle.getRotate(), 1e-6);
     }
 }

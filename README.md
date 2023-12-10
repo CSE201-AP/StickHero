@@ -13,3 +13,4 @@ It uses the ScheduledService to act as a daemon process that runs once every 2 s
 For JUnit testing, the following command can be used: `mvn clean test`
 Apart from the com.example.stickhero.spritesheet.CustomAnimationTimerTest, all the other tests incorporate the use of TestFX to create test the functionalities within the GUI.
 The CollisionTimerTest checks for the collision between two objects and the type of collision as well (complete overlap, partial overlap, no overlap, on edge overlap).
+The CanMove, CanRotate and CanScale tests check for the movement, rotation and scaling of the objects respectively.
