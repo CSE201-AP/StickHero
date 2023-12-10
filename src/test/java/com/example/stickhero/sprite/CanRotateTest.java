@@ -1,51 +1,53 @@
+package com.example.stickhero.spritesheet;
+
 import com.example.stickhero.spritesheet.CustomAnimationTimer;
-import org.junit.Before;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomAnimationTimerTest {
     private static final long LENGTHNS = 10;
     private CountingCustomAnimationTimer countingCustomAnimationTimer;
 
-    @Before()
+    @BeforeEach()
     public void setUp() {
         countingCustomAnimationTimer = new CountingCustomAnimationTimer(LENGTHNS);
     }
 
     @Test
-    public void testHandleCalledFirstTime() {
+    void testHandleCalledFirstTime() {
         countingCustomAnimationTimer.handle(0);
-        assertEquals("User handle() should be called once in first CustomAnimationTimer handle", 1, countingCustomAnimationTimer.getUserHandleCount());
+        assertEquals(1, countingCustomAnimationTimer.getUserHandleCount(), "User handle() should be called once in first CustomAnimationTimer handle");
     }
 
     @Test
-    public void testHandleNotCalledInInterval() {
+    void testHandleNotCalledInInterval() {
         countingCustomAnimationTimer.handle(0);
         countingCustomAnimationTimer.handle(5);
-        assertEquals("User handle() should not be called again in same interval length", 1, countingCustomAnimationTimer.getUserHandleCount());
+        assertEquals(1, countingCustomAnimationTimer.getUserHandleCount(), "User handle() should not be called again in same interval length");
     }
 
     @Test
-    public void testHandleCalledAtInterval() {
-        System.out.println("Testt");
+    void testHandleCalledAtInterval() {
         countingCustomAnimationTimer.handle(0);
         countingCustomAnimationTimer.handle(LENGTHNS);
-        assertEquals("User handle() should be called at end of interval length", 2, countingCustomAnimationTimer.getUserHandleCount());
+        assertEquals(2, countingCustomAnimationTimer.getUserHandleCount(), "User handle() should be called at end of interval length");
     }
 
     @Test
-    public void testHandleCalledAfterInterval() {
+    void testHandleCalledAfterInterval() {
         countingCustomAnimationTimer.handle(0);
         countingCustomAnimationTimer.handle(LENGTHNS+1);
-        assertEquals("User handle() should be called after end of interval length", 2, countingCustomAnimationTimer.getUserHandleCount());
+        assertEquals(2, countingCustomAnimationTimer.getUserHandleCount(), "User handle() should be called after end of interval length");
     }
 
     @Test
-    public void testHandleResetsLastCallTime() {
+    void testHandleResetsLastCallTime() {
         countingCustomAnimationTimer.handle(0);
         countingCustomAnimationTimer.handle(LENGTHNS);
         countingCustomAnimationTimer.handle(LENGTHNS + 1);
-        assertEquals("Last call time should be reset on invocation", 2, countingCustomAnimationTimer.getUserHandleCount());
+        assertEquals(2, countingCustomAnimationTimer.getUserHandleCount(), "Last call time should be reset on invocation");
     }
 
     private static class CountingCustomAnimationTimer extends CustomAnimationTimer {

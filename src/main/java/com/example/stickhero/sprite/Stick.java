@@ -8,8 +8,6 @@ import javafx.event.EventHandler;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
 
-import javax.swing.*;
-
 public class Stick extends Rectangle implements Sprite {
     private static final double thickness = 3;
     private static final double MAX_HEIGHT = 600D;
